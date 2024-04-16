@@ -1,0 +1,45 @@
+{
+  "name": "revou-backend-mini-project-4",
+  "version": "1.0.0",
+  "description": "revou's restful api mini project",
+  "scripts": {
+    "start": "node -r ts-node/register ./src/server.ts",
+    "start:watch": "nodemon",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alwandexa/revou-backend-mini-project-4-alwan.git"
+  },
+  "author": "alwan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alwandexa/revou-backend-mini-project-4-alwan/issues"
+  },
+  "homepage": "https://github.com/alwandexa/revou-backend-mini-project-4-alwan#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
+  }
+}
