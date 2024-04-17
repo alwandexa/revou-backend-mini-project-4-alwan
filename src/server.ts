@@ -11,6 +11,7 @@ const startServer = async () => {
     movieRouter.post("/movie/add", MovieController.createMovie);
     movieRouter.delete("/movie/delete", MovieController.deleteMovie);
     movieRouter.patch("/movie/update", MovieController.updateMovie);
+    movieRouter.get("/movie", MovieController.getMovieDetail);
 
     app.use(movieRouter);
 
