@@ -12,6 +12,7 @@ const startServer = async () => {
     movieRouter.delete("/movie/delete", MovieController.deleteMovie);
     movieRouter.patch("/movie/update", MovieController.updateMovie);
     movieRouter.get("/movie", MovieController.getMovieById);
+    movieRouter.get("/movie/list", MovieController.getAllMovies);
 
     app.use(movieRouter);
 
