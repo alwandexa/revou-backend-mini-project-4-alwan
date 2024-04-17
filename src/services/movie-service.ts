@@ -7,6 +7,7 @@ import {
   GetMovieDetailResponse,
   UpdateMovieRequest,
   UpdateMovieResponse,
+  GetAllMoviesResponse,
 } from "../models/movie-model";
 import { MovieRepository } from "../repositories/movie-repository";
 
@@ -26,6 +27,11 @@ const MovieService = {
     return {
       id: createdMovieId,
     };
+  },
+  getAllMovies: async (): Promise<GetAllMoviesResponse[]> => {
+    const movies = await MovieRepository.getAllMovies();
+
+    return movies;
   },
   getMovieById: async (
     getMovieByIdRequest: GetMovieDetailRequest
