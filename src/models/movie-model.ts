@@ -36,3 +36,6 @@ export interface GetMovieDetailRequest {
 }
 
 export interface GetMovieDetailResponse extends MovieModel {}
+
+export interface GetAllMoviesResponse extends MovieModel {}
+
