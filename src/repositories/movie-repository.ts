@@ -7,6 +7,7 @@ import {
   GetMovieDetailResponse,
   MovieModel,
   UpdateMovieRequest,
+  GetAllMoviesResponse,
 } from "../models/movie-model";
 
 const MovieRepository = {
@@ -22,6 +23,23 @@ const MovieRepository = {
 
         resolve(rows.insertId);
       });
+    });
+  },
+  getAllMovies: (): Promise<GetAllMoviesResponse[]> => {
+    return new Promise<GetAllMoviesResponse[]>((resolve, reject) => {
+      const query = `SELECT movie_id, title, director, release_date, runtime, movie_status FROM movies`;
+
+      pool.query<ResultSetHeader>(
+        query,
+        (err: QueryError, rows: GetAllMoviesResponse[]) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(rows);
+        }
+      );
     });
   },
   getMovieById: (
