@@ -7,14 +7,8 @@ export interface MovieModel {
   showtimes: Array<string>;
 }
 
-export interface CreateMovieRequest {
-  title: string;
-  director: string;
-  release_date: Date;
-  runtime: number;
+export interface CreateMovieRequest extends MovieModel {
   genres: Array<string>;
-  movie_status: string;
-  showtimes: Array<string>;
 }
 
 export interface CreateMovieResponse {
@@ -29,14 +23,8 @@ export interface DeleteMovieResponse {
   id: number;
 }
 
-export interface UpdateMovieRequest {
+export interface UpdateMovieRequest extends MovieModel {
   movie_id: number;
-  title: string;
-  director: string;
-  release_date: Date;
-  runtime: number;
-  movie_status: string;
-  showtimes: Array<string>;
 }
 
 export interface UpdateMovieResponse {
@@ -47,11 +35,4 @@ export interface GetMovieDetailRequest {
   movie_id: number;
 }
 
-export interface GetMovieDetailResponse {
-  title: string;
-  director: string;
-  release_date: Date;
-  runtime: number;
-  movie_status: string;
-  showtimes: Array<string>;
-}
+export interface GetMovieDetailResponse extends MovieModel {}
