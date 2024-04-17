@@ -3,6 +3,8 @@ import {
   CreateMovieResponse,
   DeleteMovieRequest,
   DeleteMovieResponse,
+  UpdateMovieRequest,
+  UpdateMovieResponse,
 } from "../models/movie-model";
 import { MovieRepository } from "../repositories/movie-repository";
 
@@ -32,6 +34,23 @@ const MovieService = {
 
     return {
       id: deletedMovieId,
+    };
+  },
+  updateMovie: async (
+    updateMovieRequest: UpdateMovieRequest
+  ): Promise<UpdateMovieResponse> => {
+    const updatedMovieId = await MovieRepository.updateMovie({
+      movie_id: updateMovieRequest.movie_id,
+      title: updateMovieRequest.title,
+      director: updateMovieRequest.director,
+      release_date: updateMovieRequest.release_date,
+      runtime: updateMovieRequest.runtime,
+      movie_status: updateMovieRequest.movie_status,
+      showtimes: updateMovieRequest.showtimes,
+    });
+
+    return {
+      id: updatedMovieId,
     };
   },
 };
