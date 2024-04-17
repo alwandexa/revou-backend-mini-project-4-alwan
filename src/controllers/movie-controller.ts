@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {
   CreateMovieRequest,
   DeleteMovieRequest,
+  GetMovieDetailRequest,
   UpdateMovieRequest,
 } from "../models/movie-model";
 import { MovieService } from "../services/movie-service";
@@ -19,6 +20,31 @@ const MovieController = {
         success: true,
         data: createMovieResponse,
         message: "successfully created",
+      });
+    } catch (error) {
+      let errorMessage = "server error";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      res.status(500).json({
+        success: true,
+        error: errorMessage,
+      });
+    }
+  },
+  getMovieDetail: async (req: Request, res: Response) => {
+    try {
+      const getMovieRequest = req.body as GetMovieDetailRequest;
+      const getMovieResponse = await MovieService.getMovieDetail(
+        getMovieRequest
+      );
+
+      res.status(200).json({
+        success: true,
+        data: getMovieResponse,
+        message: "successfully fetched",
       });
     } catch (error) {
       let errorMessage = "server error";
