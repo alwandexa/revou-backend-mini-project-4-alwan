@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 
-import { CreateMovieRequest, DeleteMovieRequest } from "../models/movie-model";
+import {
+  CreateMovieRequest,
+  DeleteMovieRequest,
+  UpdateMovieRequest,
+} from "../models/movie-model";
 import { MovieService } from "../services/movie-service";
 
 const MovieController = {
@@ -39,6 +43,30 @@ const MovieController = {
       res.status(200).json({
         success: true,
         data: deleteMovieResponse,
+        message: "successfully deleted",
+      });
+    } catch (error) {
+      let errorMessage = "server error";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      res.status(500).json({
+        error: errorMessage,
+      });
+    }
+  },
+  updateMovie: async (req: Request, res: Response) => {
+    try {
+      const updateMovieRequest = req.body as UpdateMovieRequest;
+      const updateMovieResponse = await MovieService.updateMovie(
+        updateMovieRequest
+      );
+
+      res.status(200).json({
+        success: true,
+        data: updateMovieResponse,
         message: "successfully deleted",
       });
     } catch (error) {
