@@ -34,12 +34,32 @@ const MovieController = {
       });
     }
   },
+  getAllMovies: async (req: Request, res: Response) => {
+    try {
+      const getAllMoviesResponse = await MovieService.getAllMovies();
+
+      res.status(200).json({
+        success: true,
+        data: getAllMoviesResponse,
+        message: "successfully fetched",
+      });
+    } catch (error) {
+      let errorMessage = "server error";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      res.status(500).json({
+        success: true,
+        error: errorMessage,
+      });
+    }
+  },
   getMovieById: async (req: Request, res: Response) => {
     try {
       const getMovieRequest = req.body as GetMovieDetailRequest;
-      const getMovieResponse = await MovieService.getMovieById(
-        getMovieRequest
-      );
+      const getMovieResponse = await MovieService.getMovieById(getMovieRequest);
 
       res.status(200).json({
         success: true,
