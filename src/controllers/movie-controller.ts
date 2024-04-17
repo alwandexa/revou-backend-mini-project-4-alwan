@@ -34,10 +34,10 @@ const MovieController = {
       });
     }
   },
-  getMovieDetail: async (req: Request, res: Response) => {
+  getMovieById: async (req: Request, res: Response) => {
     try {
       const getMovieRequest = req.body as GetMovieDetailRequest;
-      const getMovieResponse = await MovieService.getMovieDetail(
+      const getMovieResponse = await MovieService.getMovieById(
         getMovieRequest
       );
 

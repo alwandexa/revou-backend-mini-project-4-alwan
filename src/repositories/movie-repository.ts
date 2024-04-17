@@ -24,11 +24,11 @@ const MovieRepository = {
       });
     });
   },
-  getMovieDetail: (
-    getMovieDetailRequest: GetMovieDetailRequest
+  getMovieById: (
+    getMovieByIdRequest: GetMovieDetailRequest
   ): Promise<GetMovieDetailResponse> => {
     return new Promise<GetMovieDetailResponse>((resolve, reject) => {
-      const query = `select * from movies where movie_id = ${getMovieDetailRequest.movie_id}`;
+      const query = `select * from movies where movie_id = ${getMovieByIdRequest.movie_id}`;
 
       pool.query(query, (err: QueryError, rows: GetMovieDetailResponse[]) => {
         if (err) {

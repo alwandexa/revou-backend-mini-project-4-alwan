@@ -27,11 +27,11 @@ const MovieService = {
       id: createdMovieId,
     };
   },
-  getMovieDetail: async (
-    getMovieDetailRequest: GetMovieDetailRequest
+  getMovieById: async (
+    getMovieByIdRequest: GetMovieDetailRequest
   ): Promise<GetMovieDetailResponse> => {
-    const movie = await MovieRepository.getMovieDetail({
-      movie_id: getMovieDetailRequest.movie_id,
+    const movie = await MovieRepository.getMovieById({
+      movie_id: getMovieByIdRequest.movie_id,
     });
 
     return movie;
