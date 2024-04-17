@@ -3,6 +3,8 @@ import {
   CreateMovieResponse,
   DeleteMovieRequest,
   DeleteMovieResponse,
+  GetMovieDetailRequest,
+  GetMovieDetailResponse,
   UpdateMovieRequest,
   UpdateMovieResponse,
 } from "../models/movie-model";
@@ -24,6 +26,15 @@ const MovieService = {
     return {
       id: createdMovieId,
     };
+  },
+  getMovieDetail: async (
+    getMovieDetailRequest: GetMovieDetailRequest
+  ): Promise<GetMovieDetailResponse> => {
+    const movie = await MovieRepository.getMovieDetail({
+      movie_id: getMovieDetailRequest.movie_id,
+    });
+
+    return movie;
   },
   deleteMovie: async (
     deleteMovieRequest: DeleteMovieRequest
