@@ -1,8 +1,10 @@
-import { ResultSetHeader } from "mysql2";
+import { QueryError, ResultSetHeader } from "mysql2";
 
 import { pool } from "../lib/database";
 import {
   DeleteMovieRequest,
+  GetMovieDetailRequest,
+  GetMovieDetailResponse,
   MovieModel,
   UpdateMovieRequest,
 } from "../models/movie-model";
@@ -19,6 +21,36 @@ const MovieRepository = {
         }
 
         resolve(rows.insertId);
+      });
+    });
+  },
+  getMovieDetail: (
+    getMovieDetailRequest: GetMovieDetailRequest
+  ): Promise<GetMovieDetailResponse> => {
+    return new Promise<GetMovieDetailResponse>((resolve, reject) => {
+      const query = `select * from movies where movie_id = ${getMovieDetailRequest.movie_id}`;
+
+      pool.query(query, (err: QueryError, rows: GetMovieDetailResponse[]) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        if (rows.length === 0) {
+          reject(new Error("data not found"));
+          return;
+        }
+
+        const movie: GetMovieDetailResponse = {
+          title: rows[0].title,
+          director: rows[0].director,
+          release_date: rows[0].release_date,
+          runtime: rows[0].runtime,
+          movie_status: rows[0].movie_status,
+          showtimes: rows[0].showtimes,
+        };
+
+        resolve(movie);
       });
     });
   },
