@@ -1,7 +1,11 @@
 import { ResultSetHeader } from "mysql2";
 
 import { pool } from "../lib/database";
-import { CreateShowtimeRequest } from "../models/showtime-model";
+import {
+  CreateShowtimeRequest,
+  DeleteShowtimeRequest,
+  DeleteShowtimeResponse,
+} from "../models/showtime-model";
 
 const ShowtimeRepository = {
   createShowtime: (
@@ -27,6 +31,24 @@ const ShowtimeRepository = {
         }
 
         resolve(rows.insertId);
+      });
+    });
+  },
+  deleteShowtime: (
+    deleteShowtimeRequest: DeleteShowtimeRequest
+  ): Promise<DeleteShowtimeResponse> => {
+    return new Promise<DeleteShowtimeResponse>((resolve, reject) => {
+      const query = `DELETE FROM showtimes WHERE movie_id = ${deleteShowtimeRequest.movie_id}`;
+
+      pool.query<ResultSetHeader>(query, (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve({
+          movie_id: rows.insertId,
+        });
       });
     });
   },
