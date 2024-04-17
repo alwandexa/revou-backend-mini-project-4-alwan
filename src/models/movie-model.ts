@@ -28,3 +28,17 @@ export interface DeleteMovieRequest {
 export interface DeleteMovieResponse {
   id: number;
 }
+
+export interface UpdateMovieRequest {
+  movie_id: number;
+  title: string;
+  director: string;
+  release_date: Date;
+  runtime: number;
+  movie_status: string;
+  showtimes: Array<string>;
+}
+
+export interface UpdateMovieResponse {
+  id : number;
+}
