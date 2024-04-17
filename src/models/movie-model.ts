@@ -40,5 +40,18 @@ export interface UpdateMovieRequest {
 }
 
 export interface UpdateMovieResponse {
-  id : number;
+  id: number;
+}
+
+export interface GetMovieDetailRequest {
+  movie_id: number;
+}
+
+export interface GetMovieDetailResponse {
+  title: string;
+  director: string;
+  release_date: Date;
+  runtime: number;
+  movie_status: string;
+  showtimes: Array<string>;
 }
