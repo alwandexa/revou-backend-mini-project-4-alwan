@@ -1,6 +1,7 @@
 import express from "express";
 
 import { MovieController } from "./controllers/movie-controller";
+import { ShowtimeController } from "./controllers/showtime-controller";
 
 const startServer = async () => {
   try {
@@ -14,7 +15,11 @@ const startServer = async () => {
     movieRouter.get("/movie", MovieController.getMovieById);
     movieRouter.get("/movie/list", MovieController.getAllMovies);
 
+    const showtimeRouter = express.Router();
+    showtimeRouter.post("/showtime/add", ShowtimeController.createShowtime);
+
     app.use(movieRouter);
+    app.use(showtimeRouter);
 
     const PORT = 3001;
 
