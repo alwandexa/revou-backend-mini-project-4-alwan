@@ -9,6 +9,7 @@ const startServer = async () => {
 
     const movieRouter = express.Router();
     movieRouter.post("/movie/add", MovieController.createMovie);
+    movieRouter.delete("/movie/delete", MovieController.deleteMovie);
 
     app.use(movieRouter);
 
