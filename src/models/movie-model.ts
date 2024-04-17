@@ -20,3 +20,11 @@ export interface CreateMovieRequest {
 export interface CreateMovieResponse {
   id: number;
 }
+
+export interface DeleteMovieRequest {
+  id: number;
+}
+
+export interface DeleteMovieResponse {
+  id: number;
+}
