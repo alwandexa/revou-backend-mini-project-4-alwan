@@ -1,4 +1,8 @@
-import { CreateShowtimeRequest, ShowtimeModel } from "../models/showtime-model";
+import {
+  CreateShowtimeRequest,
+  DeleteShowtimeRequest,
+  DeleteShowtimeResponse,
+} from "../models/showtime-model";
 import { ShowtimeRepository } from "../repositories/showtime-repository";
 
 const ShowtimeService = {
@@ -11,6 +15,17 @@ const ShowtimeService = {
 
     return {
       id: createdShowtimesId,
+    };
+  },
+  deleteShowtime: async (
+    deleteShowtimeRequest: DeleteShowtimeRequest
+  ): Promise<DeleteShowtimeResponse> => {
+    const deletedShowtimeMovieId = await ShowtimeRepository.deleteShowtime(
+      deleteShowtimeRequest
+    );
+
+    return {
+      movie_id: deletedShowtimeMovieId.movie_id,
     };
   },
 };
