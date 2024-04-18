@@ -18,6 +18,31 @@ const UserRepository = {
       });
     });
   },
+  getByEmail: (email: string) => {
+    return new Promise<UserModel>((resolve, reject) => {
+      const query = `SELECT * FROM users where email = '${email}'`;
+
+      pool.query(query, (err: QueryError, rows: any) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        if (rows.length == 0) {
+          reject(new Error("data not found"));
+          return;
+        }
+
+        resolve({
+          user_id: rows[0].id,
+          email: rows[0].email,
+          password: rows[0].password,
+          name: rows[0].name,
+          birthdate: rows[0].birthdate,
+        });
+      });
+    });
+  },
 };
 
 export { UserRepository };
