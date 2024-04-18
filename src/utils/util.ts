@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export function generateJwtToken(userId: number): Promise<string> {
+export const generateJwtToken = (userId: number): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const currentDate = new Date();
     const fiveMinutesLater = currentDate.setMinutes(
@@ -21,9 +21,9 @@ export function generateJwtToken(userId: number): Promise<string> {
       resolve(token as string);
     });
   });
-}
+};
 
-export function verifyJwtToken(token: string): Promise<any> {
+export const verifyJwtToken = (token: string): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
     jwt.verify(token, "1jdsij098_123.pwerj", (err, payload) => {
       if (err) {
@@ -34,4 +34,4 @@ export function verifyJwtToken(token: string): Promise<any> {
       resolve(payload);
     });
   });
-}
+};
