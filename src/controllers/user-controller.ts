@@ -24,6 +24,26 @@ const UserController = {
       });
     }
   },
+  login: async (req: Request, res: Response) => {
+    try {
+      const loginUserRequest = req.body as LoginUserRequest;
+      const loginUserReponse = await UserService.login(loginUserRequest);
+
+      res.status(200).json({
+        data: loginUserReponse,
+      });
+    } catch (e) {
+      let errorMessage = "server error";
+
+      if (e instanceof Error) {
+        errorMessage = e.message;
+      }
+
+      res.status(500).json({
+        error: errorMessage,
+      });
+    }
+  },
 };
 
 export { UserController };
