@@ -1,7 +1,13 @@
 import bcrypt from "bcrypt";
 
 import { UserRepository } from "../repositories/user-repository";
-import { CreateUserRequest, CreateUserResponse } from "../models/user-model";
+import {
+  CreateUserRequest,
+  CreateUserResponse,
+  LoginUserRequest,
+  LoginUserResponse,
+} from "../models/user-model";
+import { generateJwtToken } from "../utils/util";
 
 const UserService = {
   async register(
@@ -16,6 +22,23 @@ const UserService = {
 
     return {
       user_id: createdUserId,
+    };
+  },
+  async login(loginUserRequest: LoginUserRequest): Promise<LoginUserResponse> {
+    const user = await UserRepository.getByEmail(loginUserRequest.email);
+    const isPasswordMatched = await bcrypt.compare(
+      loginUserRequest.password,
+      user.password
+    );
+
+    if (!isPasswordMatched) {
+      throw new Error("invalid password");
+    }
+
+    const jwtToken = await generateJwtToken(user.user_id);
+
+    return {
+      token: jwtToken,
     };
   },
 };
