@@ -22,3 +22,16 @@ export function generateJwtToken(userId: number): Promise<string> {
     });
   });
 }
+
+export function verifyJwtToken(token: string): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
+    jwt.verify(token, "1jdsij098_123.pwerj", (err, payload) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(payload);
+    });
+  });
+}
