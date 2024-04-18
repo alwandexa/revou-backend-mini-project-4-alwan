@@ -1,4 +1,4 @@
-import { QueryError, ResultSetHeader } from "mysql2";
+import { QueryError, ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { pool } from "../lib/database";
 import {
@@ -18,22 +18,18 @@ const MovieRepository = {
 
     return result[0].insertId;
   },
-  getAllMovies: (): Promise<GetAllMoviesResponse[]> => {
-    return new Promise<GetAllMoviesResponse[]>((resolve, reject) => {
-      const query = `SELECT movie_id, title, director, release_date, runtime, movie_status FROM movies`;
+  getAllMovies: async (): Promise<GetAllMoviesResponse[]> => {
+    const query = "SELECT movie_id, title, director FROM movies";
 
-      pool.query<ResultSetHeader>(
-        query,
-        (err: QueryError, rows: GetAllMoviesResponse[]) => {
-          if (err) {
-            reject(err);
-            return;
-          }
+    const [rows] = await pool.query<RowDataPacket[]>(query);
 
-          resolve(rows);
-        }
-      );
-    });
+    const result : GetAllMoviesResponse[] = rows.map((value) => ({
+      movie_id: value.movie_id,
+      title: value.title,
+      director: value.director,
+    }));
+
+    return result;
   },
   getMovieById: (
     getMovieByIdRequest: GetMovieDetailRequest
