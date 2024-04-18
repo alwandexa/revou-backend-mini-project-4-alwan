@@ -24,7 +24,29 @@ const ShowtimeController = {
       }
 
       res.status(500).json({
+        success: false,
+        error: errorMessage,
+      });
+    }
+  },
+  updateShowtime: async (req: Request, res: Response) => {
+    try {
+      const createShowtimeResponse = await ShowtimeService.updateShowtime();
+
+      res.status(200).json({
         success: true,
+        data: createShowtimeResponse,
+        message: "successfully updated",
+      });
+    } catch (error) {
+      let errorMessage = "server error";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      res.status(500).json({
+        success: false,
         error: errorMessage,
       });
     }
