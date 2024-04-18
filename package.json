@@ -41,7 +41,7 @@
     "watch": [
       "src"
     ],
-    "exec": "npm start",
+    "exec": "bun start",
     "ext": "ts"
   }
 }
