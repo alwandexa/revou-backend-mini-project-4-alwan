@@ -28,6 +28,11 @@ const ShowtimeService = {
       movie_id: deletedShowtimeMovieId.movie_id,
     };
   },
+  updateShowtime: async (): Promise<number> => {
+    const result = ShowtimeRepository.updateShowtime2();
+
+    return 1;
+  },
 };
 
 export { ShowtimeService };
