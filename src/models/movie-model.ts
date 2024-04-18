@@ -37,5 +37,9 @@ export interface GetMovieDetailRequest {
 
 export interface GetMovieDetailResponse extends MovieModel {}
 
-export interface GetAllMoviesResponse extends MovieModel {}
+export interface GetAllMoviesResponse  {
+  movie_id : number
+  title : string
+  director : string
+}
 
