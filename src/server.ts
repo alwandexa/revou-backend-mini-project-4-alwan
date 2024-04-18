@@ -17,6 +17,7 @@ const startServer = async () => {
 
     const showtimeRouter = express.Router();
     showtimeRouter.post("/showtime/add", ShowtimeController.createShowtime);
+    showtimeRouter.patch("/showtime/update", ShowtimeController.updateShowtime);
 
     app.use(movieRouter);
     app.use(showtimeRouter);
