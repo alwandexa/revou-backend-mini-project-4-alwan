@@ -15,3 +15,12 @@ export interface CreateUserRequest {
 export interface CreateUserResponse {
   user_id: number;
 }
+
+export interface LoginUserRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginUserResponse {
+  token: string;
+}
