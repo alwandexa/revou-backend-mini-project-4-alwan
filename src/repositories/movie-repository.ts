@@ -11,19 +11,12 @@ import {
 } from "../models/movie-model";
 
 const MovieRepository = {
-  createMovie: (movieModel: MovieModel): Promise<number> => {
-    return new Promise<number>((resolve, reject) => {
-      const query = `INSERT INTO movies(title, director, release_date, runtime, movie_status) values('${movieModel.title}', '${movieModel.director}', '${movieModel.release_date}', ${movieModel.runtime}, '${movieModel.movie_status}')`;
+  createMovie: async (movieModel: MovieModel) => {
+    const query = `INSERT INTO movies(title, director, release_date, runtime, movie_status) values('${movieModel.title}', '${movieModel.director}', '${movieModel.release_date}', ${movieModel.runtime}, '${movieModel.movie_status}')`;
 
-      pool.query<ResultSetHeader>(query, (err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+    const result = await pool.query<ResultSetHeader>(query);
 
-        resolve(rows.insertId);
-      });
-    });
+    return result[0].insertId;
   },
   getAllMovies: (): Promise<GetAllMoviesResponse[]> => {
     return new Promise<GetAllMoviesResponse[]>((resolve, reject) => {
@@ -76,28 +69,28 @@ const MovieRepository = {
     return new Promise<number>((resolve, reject) => {
       const query = `UPDATE movies SET deleted_at = now() WHERE movie_id = ${deleteMovieRequest.id}`;
 
-      pool.query<ResultSetHeader>(query, (err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      // pool.query<ResultSetHeader>(query, (err, rows) => {
+      //   if (err) {
+      //     reject(err);
+      //     return;
+      //   }
 
-        resolve(rows.insertId);
-      });
+      //   resolve(rows.insertId);
+      // });
     });
   },
   updateMovie: (updateMovieRequest: UpdateMovieRequest): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
       const query = `UPDATE movies SET title = '${updateMovieRequest.title}', director = '${updateMovieRequest.director}', release_date = '${updateMovieRequest.release_date}', runtime = ${updateMovieRequest.runtime}, movie_status = '${updateMovieRequest.movie_status}', updated_at = now() WHERE movie_id = ${updateMovieRequest.movie_id}`;
 
-      pool.query<ResultSetHeader>(query, (err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      // pool.query<ResultSetHeader>(query, (err, rows) => {
+      //   if (err) {
+      //     reject(err);
+      //     return;
+      //   }
 
-        resolve(rows.insertId);
-      });
+      //   resolve(rows.insertId);
+      // });
     });
   },
 };
