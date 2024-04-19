@@ -23,7 +23,7 @@ const MovieRepository = {
 
     const [rows] = await pool.query<RowDataPacket[]>(query);
 
-    const result : GetAllMoviesResponse[] = rows.map((value) => ({
+    const result: GetAllMoviesResponse[] = rows.map((value) => ({
       movie_id: value.movie_id,
       title: value.title,
       director: value.director,
@@ -65,28 +65,34 @@ const MovieRepository = {
     return new Promise<number>((resolve, reject) => {
       const query = `UPDATE movies SET deleted_at = now() WHERE movie_id = ${deleteMovieRequest.id}`;
 
-      // pool.query<ResultSetHeader>(query, (err, rows) => {
-      //   if (err) {
-      //     reject(err);
-      //     return;
-      //   }
+      pool.query<ResultSetHeader>(
+        query,
+        (err: QueryError, rows: ResultSetHeader) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
-      //   resolve(rows.insertId);
-      // });
+          resolve(rows.insertId);
+        }
+      );
     });
   },
   updateMovie: (updateMovieRequest: UpdateMovieRequest): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
       const query = `UPDATE movies SET title = '${updateMovieRequest.title}', director = '${updateMovieRequest.director}', release_date = '${updateMovieRequest.release_date}', runtime = ${updateMovieRequest.runtime}, movie_status = '${updateMovieRequest.movie_status}', updated_at = now() WHERE movie_id = ${updateMovieRequest.movie_id}`;
 
-      // pool.query<ResultSetHeader>(query, (err, rows) => {
-      //   if (err) {
-      //     reject(err);
-      //     return;
-      //   }
+      pool.query<ResultSetHeader>(
+        query,
+        (err: QueryError, rows: ResultSetHeader) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
-      //   resolve(rows.insertId);
-      // });
+          resolve(rows.insertId);
+        }
+      );
     });
   },
 };
