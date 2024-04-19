@@ -1,4 +1,4 @@
-import { PoolConnection, ResultSetHeader } from "mysql2";
+import { PoolConnection, QueryError, ResultSetHeader } from "mysql2";
 
 import { pool } from "../lib/database";
 import {
@@ -24,14 +24,17 @@ const ShowtimeRepository = {
         }
       });
 
-      pool.query<ResultSetHeader>(query + data, (err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      pool.query<ResultSetHeader>(
+        query + data,
+        (err: QueryError, rows: ResultSetHeader) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
-        resolve(rows.insertId);
-      });
+          resolve(rows.insertId);
+        }
+      );
     });
   },
   deleteShowtime: (
@@ -40,106 +43,98 @@ const ShowtimeRepository = {
     return new Promise<DeleteShowtimeResponse>((resolve, reject) => {
       const query = `DELETE FROM showtimes WHERE movie_id = ${deleteShowtimeRequest.movie_id}`;
 
-      pool.query<ResultSetHeader>(query, (err, rows) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve({
-          movie_id: rows.insertId,
-        });
-      });
-    });
-  },
-  updateShowtime: (): Promise<number> => {
-    return new Promise<number>((resolve, reject) => {
-      pool.getConnection((error, connection) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        connection.beginTransaction((err) => {
+      pool.query<ResultSetHeader>(
+        query,
+        (err: QueryError, rows: ResultSetHeader) => {
           if (err) {
             reject(err);
             return;
           }
-          connection.query(
-            "DELETE FROM showtimes WHERE movie_id=1 ",
-            (err, result) => {
-              if (err) {
-                connection.rollback(() => {
-                  reject(err);
-                });
-                return;
-              }
 
-              connection.query(
-                "INSERT INTO showtimes(movie_id, showtime) VALUES(1, '18:30' xx)",
-                (err, result) => {
-                  if (err) {
-                    reject(err);
-                    connection.rollback(() => {
-                      return;
-                    });
-                  }
-                  connection.commit((err) => {
-                    if (err) {
-                      connection.rollback(() => {
-                        reject(err);
-                        return;
-                      });
-                    }
-                    connection.release();
-                    resolve(1);
-                  });
-                }
-              );
-            }
-          );
-        });
-      });
+          resolve({
+            movie_id: rows.insertId,
+          });
+        }
+      );
     });
+  },
+  updateShowtime: async (): Promise<number> => {
+    const connection = await pool.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      await connection.query("DELETE FROM showtimes WHERE movie_id=1");
+      await connection.query(
+        "INSERT INTO showtimes(movie_id, showtime) VALUES(1 , '18:21' asd)"
+      );
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+    } finally {
+      connection.release();
+    }
+
+    return 1;
+    // connection.beginTransaction();
+
+    // connection
+    //   .query("DELETE FROM showtimes WHERE movie_id=1")
+    //   .then(() => {
+    //     connection.query(
+    //       "INSERT INTO showtimes(movie_id, showtime) VALUES(1 , '18:30')"
+    //     );
+    //   })
+    //   .then(() => {
+    //     connection.commit();
+    //   })
+    //   .catch((error) => {
+    //     if (error) {
+    //       connection.rollback();
+    //       throw error;
+    //     }
+    //   })
+    //   .finally(() => {
+    //     connection.release();
+    //   });
   },
   updateShowtime2: async (): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
-      pool.getConnection((error, connection) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        try {
-          connection.beginTransaction(async (err) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-          });
-
-          connection.query("DELETE FROM showtimes WHERE movie_id=1 xxx", 
-          );
-          connection.query(
-            "INSERT INTO showtimes(movie_id, showtime) VALUES(1, '18:30')"
-          );
-
-          connection.commit();
-        } catch (err) {
-          connection.rollback((err) => {
-            if (err) {
-              connection.rollback(() => {
-                reject(err);
-                return;
-              });
-            }
-          });
-          console.error("Error occurred during the transaction:", err);
-        } finally {
-          if (connection) {
-            connection.release();
-          }
-        }
-      });
+      
+      // pool.getConnection((error, connection) => {
+      //   if (error) {
+      //     reject(error);
+      //     return;
+      //   }
+      //   try {
+      //     connection.beginTransaction(async (err) => {
+      //       if (err) {
+      //         reject(err);
+      //         return;
+      //       }
+      //     });
+      //     connection.query("DELETE FROM showtimes WHERE movie_id=1 xxx",
+      //     );
+      //     connection.query(
+      //       "INSERT INTO showtimes(movie_id, showtime) VALUES(1, '18:30')"
+      //     );
+      //     connection.commit();
+      //   } catch (err) {
+      //     connection.rollback((err) => {
+      //       if (err) {
+      //         connection.rollback(() => {
+      //           reject(err);
+      //           return;
+      //         });
+      //       }
+      //     });
+      //     console.error("Error occurred during the transaction:", err);
+      //   } finally {
+      //     if (connection) {
+      //       connection.release();
+      //     }
+      //   }
+      // });
     });
   },
 };

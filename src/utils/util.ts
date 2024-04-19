@@ -1,4 +1,7 @@
+import dayjs from "dayjs";
+import { Response } from "express";
 import jwt from "jsonwebtoken";
+import { PoolConnection } from "mysql2/promise";
 
 export const generateJwtToken = (userId: number): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
@@ -33,5 +36,44 @@ export const verifyJwtToken = (token: string): Promise<any> => {
 
       resolve(payload);
     });
+  });
+};
+
+export const onError = (
+  res: Response,
+  message: string,
+  connection?: PoolConnection
+) => {
+  if (connection) {
+    connection.rollback();
+    connection.release();
+  }
+
+  res.contentType("application/json").status(200);
+  res.json({
+    sucesss: false,
+    message: message,
+    timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+  });
+};
+
+export const onSuccess = (
+  res: Response,
+  data: any,
+  message: string,
+  status: number = 200,
+  connection?: PoolConnection
+) => {
+  if (connection) {
+    connection.commit();
+    connection.release();
+  }
+
+  res.contentType("application/json").status(status);
+  res.json({
+    success: true,
+    data: data,
+    message: message,
+    timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
   });
 };

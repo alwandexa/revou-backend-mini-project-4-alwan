@@ -5,3 +5,8 @@ export interface ScheduleModel {
   show_date: Date;
 }
 
+export interface CreateScheduleRequest extends ScheduleModel {}
+
+export interface CreateScheduleResponse {
+  schedule_id: number;
+}
