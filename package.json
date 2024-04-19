@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "revou's restful api mini project",
   "scripts": {
-    "start": "node -r ts-node/register ./src/server.ts",
+    "start": "bun ./src/server.ts",
     "start:watch": "nodemon",
     "build": "tsc"
   },
