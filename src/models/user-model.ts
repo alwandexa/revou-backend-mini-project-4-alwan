@@ -10,6 +10,7 @@ export interface CreateUserRequest {
   email: string;
   password: string;
   name: string;
+  birthdate: Date;
 }
 
 export interface CreateUserResponse {

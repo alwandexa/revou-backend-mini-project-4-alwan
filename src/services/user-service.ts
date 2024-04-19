@@ -18,6 +18,7 @@ const UserService = {
       email: createUserRequest.email,
       password: hashedPassword,
       name: createUserRequest.name,
+      birthdate : createUserRequest.birthdate
     });
 
     return {
