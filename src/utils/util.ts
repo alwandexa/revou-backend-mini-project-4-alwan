@@ -49,9 +49,10 @@ export const onError = (
     connection.release();
   }
 
-  res.contentType("application/json").status(200);
+  res.contentType("application/json")
+  res.status(200);
   res.json({
-    sucesss: false,
+    success: false,
     message: message,
     timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
   });
@@ -69,7 +70,8 @@ export const onSuccess = (
     connection.release();
   }
 
-  res.contentType("application/json").status(status);
+  res.contentType("application/json");
+  res.status(status)
   res.json({
     success: true,
     data: data,
