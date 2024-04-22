@@ -9,7 +9,7 @@ const UserController = {
       const createUserRequest = req.body as CreateUserRequest;
       const createUserReponse = await UserService.register(createUserRequest);
 
-      res.status(200).json({
+      res.status(201).json({
         data: createUserReponse,
       });
     } catch (e) {
