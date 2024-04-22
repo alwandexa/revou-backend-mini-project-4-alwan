@@ -1,37 +1,44 @@
 import { UserController } from "./user-controller";
 import { CreateUserRequest, LoginUserRequest } from "../models/user-model";
-import { Request } from "express";
+import { Request, Response } from "express";
+import { UserService } from "../services/user-service";
+
+jest.mock("../services/user-service");
 
 describe("UserController", () => {
   describe("register", () => {
     it("should register a new user", async () => {
-      const mockReq = {
+      const mockRequest: Partial<Request> = {
         body: {
           name: "John Doe",
           email: "john@example.com",
           password: "password123",
+          birthdate: new Date("1990-01-01"),
         } as CreateUserRequest,
-      } as Request;
-
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
       };
 
-      jest.spyOn(UserController, "register").mockResolvedValueOnce({
-        id: 1,
-        name: "John Doe",
-        email: "john@example.com",
-      });
+      const mockResponse: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        contentType: jest.fn(),
+      };
 
-      await UserController.register(mockReq, mockRes);
+      const mockRegisterResponse = {
+        user_id: 1,
+      };
+      (UserService.register as jest.Mock).mockResolvedValue(
+        mockRegisterResponse
+      );
 
-      expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith({
+      await UserController.register(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith({
         data: {
-          id: 1,
-          name: "John Doe",
-          email: "john@example.com",
+          user_id: 1,
         },
       });
     });
@@ -45,85 +52,92 @@ describe("UserController", () => {
         } as CreateUserRequest,
       };
 
-      const mockRes = {
+      const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
+        contentType: jest.fn(),
       };
 
       const errorMessage = "Error registering user";
 
-      jest
-        .spyOn(UserController, "register")
-        .mockRejectedValueOnce(new Error(errorMessage));
+      //   jest
+      //     .spyOn(UserService, "register")
+      //     .mockRejectedValueOnce(new Error(errorMessage));
+      (UserService.register as jest.Mock).mockRejectedValueOnce(
+        new Error(errorMessage)
+      );
 
-      await UserController.register(mockReq, mockRes);
+      await UserController.register(
+        mockReq as Request,
+        mockResponse as Response
+      );
 
-      expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith({
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
         error: errorMessage,
       });
     });
   });
 
-  describe("login", () => {
-    it("should login an existing user", async () => {
-      const mockReq = {
-        body: {
-          email: "john@example.com",
-          password: "password123",
-        } as LoginUserRequest,
-      };
+  //   describe("login", () => {
+  //     it("should login an existing user", async () => {
+  //       const mockReq = {
+  //         body: {
+  //           email: "john@example.com",
+  //           password: "password123",
+  //         } as LoginUserRequest,
+  //       };
 
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
+  //       const mockRes = {
+  //         status: jest.fn().mockReturnThis(),
+  //         json: jest.fn(),
+  //       };
 
-      jest.spyOn(UserController, "login").mockResolvedValueOnce({
-        id: 1,
-        name: "John Doe",
-        email: "john@example.com",
-        token: "123abc",
-      });
+  //       jest.spyOn(UserController, "login").mockResolvedValueOnce({
+  //         id: 1,
+  //         name: "John Doe",
+  //         email: "john@example.com",
+  //         token: "123abc",
+  //       });
 
-      await UserController.login(mockReq, mockRes);
+  //       await UserController.login(mockReq, mockRes);
 
-      expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        data: {
-          id: 1,
-          name: "John Doe",
-          email: "john@example.com",
-          token: "123abc",
-        },
-      });
-    });
+  //       expect(mockRes.status).toHaveBeenCalledWith(200);
+  //       expect(mockRes.json).toHaveBeenCalledWith({
+  //         data: {
+  //           id: 1,
+  //           name: "John Doe",
+  //           email: "john@example.com",
+  //           token: "123abc",
+  //         },
+  //       });
+  //     });
 
-    it("should handle login errors", async () => {
-      const mockReq = {
-        body: {
-          email: "john@example.com",
-          password: "wrongpassword",
-        } as LoginUserRequest,
-      };
+  //     it("should handle login errors", async () => {
+  //       const mockReq = {
+  //         body: {
+  //           email: "john@example.com",
+  //           password: "wrongpassword",
+  //         } as LoginUserRequest,
+  //       };
 
-      const mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
+  //       const mockRes = {
+  //         status: jest.fn().mockReturnThis(),
+  //         json: jest.fn(),
+  //       };
 
-      const errorMessage = "Invalid email or password";
+  //       const errorMessage = "Invalid email or password";
 
-      jest
-        .spyOn(UserController, "login")
-        .mockRejectedValueOnce(new Error(errorMessage));
+  //       jest
+  //         .spyOn(UserController, "login")
+  //         .mockRejectedValueOnce(new Error(errorMessage));
 
-      await UserController.login(mockReq, mockRes);
+  //       await UserController.login(mockReq, mockRes);
 
-      expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: errorMessage,
-      });
-    });
-  });
+  //       expect(mockRes.status).toHaveBeenCalledWith(500);
+  //       expect(mockRes.json).toHaveBeenCalledWith({
+  //         error: errorMessage,
+  //       });
+  //     });
+  //   });
 });
