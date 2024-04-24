@@ -91,6 +91,7 @@ describe("UserController", () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
+        contentType: jest.fn(),
       };
 
       const mockLoginResponse = {
@@ -109,6 +110,38 @@ describe("UserController", () => {
         data: {
           token: "asdfoij091091283980",
         },
+      });
+    });
+
+    it("should handle login errors", async () => {
+      const mockRequest: Partial<Request> = {
+        body: {
+          email: "john@example.com",
+          password: "wrongpassword",
+        } as LoginUserRequest,
+      };
+
+      const mockResponse: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        contentType: jest.fn(),
+      };
+
+      const errorMessage = "Invalid email or password";
+
+      (UserService.login as jest.Mock).mockResolvedValue(
+        new Error(errorMessage)
+      );
+
+      await UserController.login(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: false,
+        message: errorMessage,
       });
     });
   });
