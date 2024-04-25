@@ -7,15 +7,34 @@ import { CreateScheduleRequest } from "../models/schedule-model";
 import { ScheduleService } from "../services/schedule-service";
 import { pool as Pool } from "../lib/database";
 
+const now: Date = new Date();
+const formattedNow = dayjs(now).format("YYYY-MM-DD HH:mm:ss");
+
 jest.mock("../services/schedule-service");
 jest.mock("../lib/database");
+jest.mock("../utils/util", () => ({
+  ...jest.requireActual("../utils/util"),
+  onSuccess: jest.fn((res, data, message, statusCode) => {
+    return res.status(statusCode).json({
+      success: true,
+      message,
+      data,
+      timestamp: formattedNow,
+    });
+  }),
+  onError: jest.fn((res, message) => {
+    return res.status(200).json({
+      success: false,
+      message,
+      timestamp: formattedNow,
+    });
+  }),
+}));
 
 describe("ScheduleController", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockConnection: Partial<Mocked<any>>;
-  let now: Date = new Date();
-  let formattedNow = dayjs(now).format("YYYY-MM-DD HH:mm:ss");
 
   beforeEach(() => {
     mockRequest = {
@@ -39,7 +58,7 @@ describe("ScheduleController", () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   describe("createSchedule", () => {

@@ -2,8 +2,30 @@ import { UserController } from "./user-controller";
 import { CreateUserRequest, LoginUserRequest } from "../models/user-model";
 import { Request, Response } from "express";
 import { UserService } from "../services/user-service";
+import dayjs from "dayjs";
+
+const now: Date = new Date();
+const formattedNow = dayjs(now).format("YYYY-MM-DD HH:mm:ss");
 
 jest.mock("../services/user-service");
+jest.mock("../utils/util", () => ({
+  ...jest.requireActual("../utils/util"),
+  onSuccess: jest.fn((res, data, message, statusCode) => {
+    return res.status(statusCode).json({
+      success: true,
+      message,
+      data,
+      timestamp: formattedNow,
+    });
+  }),
+  onError: jest.fn((res, message) => {
+    return res.status(200).json({
+      success: false,
+      message,
+      timestamp: formattedNow,
+    });
+  }),
+}));
 
 describe("UserController", () => {
   describe("register", () => {
@@ -37,9 +59,12 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        message: "registered",
         data: {
           user_id: 1,
         },
+        timestamp: formattedNow,
       });
     });
 
@@ -60,9 +85,6 @@ describe("UserController", () => {
 
       const errorMessage = "Error registering user";
 
-      //   jest
-      //     .spyOn(UserService, "register")
-      //     .mockRejectedValueOnce(new Error(errorMessage));
       (UserService.register as jest.Mock).mockRejectedValueOnce(
         new Error(errorMessage)
       );
@@ -72,9 +94,11 @@ describe("UserController", () => {
         mockResponse as Response
       );
 
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: errorMessage,
+        success: false,
+        timestamp: formattedNow,
+        message: errorMessage,
       });
     });
   });
@@ -107,9 +131,12 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
         data: {
-          token: "asdfoij091091283980",
+          token: mockLoginResponse.token,
         },
+        message: "logged in",
+        timestamp: formattedNow,
       });
     });
 
@@ -129,7 +156,7 @@ describe("UserController", () => {
 
       const errorMessage = "Invalid email or password";
 
-      (UserService.login as jest.Mock).mockResolvedValue(
+      (UserService.login as jest.Mock).mockRejectedValueOnce(
         new Error(errorMessage)
       );
 
@@ -142,6 +169,7 @@ describe("UserController", () => {
       expect(mockResponse.json).toHaveBeenCalledWith({
         success: false,
         message: errorMessage,
+        timestamp: formattedNow,
       });
     });
   });
