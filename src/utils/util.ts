@@ -3,7 +3,7 @@ import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { PoolConnection } from "mysql2/promise";
 
-export const generateJwtToken = (userId: number): Promise<string> => {
+export const generateJwtToken = (userId: number, role: string): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const currentDate = new Date();
     const fiveMinutesLater = currentDate.setMinutes(
@@ -12,6 +12,7 @@ export const generateJwtToken = (userId: number): Promise<string> => {
 
     const payload = {
       sub: userId,
+      role : role,
       exp: Math.floor(fiveMinutesLater / 1000),
     };
 
