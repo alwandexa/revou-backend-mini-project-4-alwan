@@ -21,7 +21,6 @@ const MovieService = {
       release_date: createMovieRequest.release_date,
       runtime: createMovieRequest.runtime,
       movie_status: createMovieRequest.movie_status,
-      showtimes: createMovieRequest.showtimes,
     });
 
     return {
@@ -63,7 +62,6 @@ const MovieService = {
       release_date: updateMovieRequest.release_date,
       runtime: updateMovieRequest.runtime,
       movie_status: updateMovieRequest.movie_status,
-      showtimes: updateMovieRequest.showtimes,
     });
 
     return {
