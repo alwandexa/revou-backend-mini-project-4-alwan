@@ -4,6 +4,7 @@ export interface UserModel {
   email: string;
   password: string;
   birthdate: Date;
+  role: string;
 }
 
 export interface CreateUserRequest {
@@ -11,6 +12,7 @@ export interface CreateUserRequest {
   password: string;
   name: string;
   birthdate: Date;
+  role: string;
 }
 
 export interface CreateUserResponse {
