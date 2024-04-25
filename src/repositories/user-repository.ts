@@ -1,47 +1,26 @@
-import { QueryError, ResultSetHeader } from "mysql2";
+import { QueryError, ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { CreateUserRequest, UserModel } from "../models/user-model";
 import { pool } from "../lib/database";
 
 const UserRepository = {
-  createUser: (userModel: CreateUserRequest) => {
-    return new Promise<number>((resolve, reject) => {
-      const query = `INSERT INTO users(email, password, name) values('${userModel.email}', '${userModel.password}', '${userModel.name}')`;
+  createUser: async (userModel: CreateUserRequest) => {
+    const query = `INSERT INTO users(email, password, name, role, birthdate) values('${userModel.email}', '${userModel.password}', '${userModel.name}', '${userModel.role}', '${userModel.birthdate}')`;
 
-      pool.query(query, (err: QueryError, rows: ResultSetHeader) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+    const result = await pool.query<ResultSetHeader>(query);
 
-        resolve(rows.insertId);
-      });
-    });
+    return result[0].insertId;
   },
-  getByEmail: (email: string) => {
-    return new Promise<UserModel>((resolve, reject) => {
+  getByEmail: async (email: string) => {
       const query = `SELECT * FROM users where email = '${email}'`;
 
-      pool.query(query, (err: QueryError, rows: any) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      const [rows] = await pool.query<RowDataPacket[]>(query);
 
-        if (rows.length == 0) {
-          reject(new Error("data not found"));
-          return;
-        }
+      if (rows.length === 0) {
+        throw new Error("User not found");
+      }
 
-        resolve({
-          user_id: rows[0].id,
-          email: rows[0].email,
-          password: rows[0].password,
-          name: rows[0].name,
-          birthdate: rows[0].birthdate,
-        });
-      });
-    });
+      return rows[0] as UserModel;
   },
 };
 
