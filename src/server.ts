@@ -35,6 +35,11 @@ const startServer = async () => {
       authMiddleware("admin"),
       ScheduleController.createSchedule
     );
+    scheduleRouter.patch(
+      "/schedule/update",
+      authMiddleware("admin"),
+      ScheduleController.updateSchedule
+    );
 
     const userRouter = Router();
     userRouter.post("/register", UserController.register);
