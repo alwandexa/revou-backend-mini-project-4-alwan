@@ -113,7 +113,7 @@ const MovieController = {
       res.status(200).json({
         success: true,
         data: updateMovieResponse,
-        message: "successfully deleted",
+        message: "successfully updated",
       });
     } catch (error) {
       let errorMessage = "server error";
