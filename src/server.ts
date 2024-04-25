@@ -20,8 +20,8 @@ const startServer = async () => {
     scheduleRouter.post("/schedule/create", ScheduleController.createSchedule);
 
     const userRouter = Router();
-    userRouter.post("/user/register", UserController.register);
-    userRouter.post("/user/login", UserController.login);
+    userRouter.post("/register", UserController.register);
+    userRouter.post("/login", UserController.login);
 
     app.use(movieRouter);
     app.use(scheduleRouter);
