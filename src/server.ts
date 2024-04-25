@@ -3,6 +3,7 @@ import express, { Router } from "express";
 import { MovieController } from "./controllers/movie-controller";
 import { ScheduleController } from "./controllers/schedule-controller";
 import { UserController } from "./controllers/user-controller";
+import { authMiddleware } from "./middlewares/authorization";
 
 const startServer = async () => {
   try {
@@ -10,14 +11,30 @@ const startServer = async () => {
     app.use(express.json());
 
     const movieRouter = Router();
-    movieRouter.post("/movie/add", MovieController.createMovie);
-    movieRouter.delete("/movie/delete", MovieController.deleteMovie);
-    movieRouter.patch("/movie/update", MovieController.updateMovie);
+    movieRouter.post(
+      "/movie/add",
+      authMiddleware("admin"),
+      MovieController.createMovie
+    );
+    movieRouter.delete(
+      "/movie/delete",
+      authMiddleware("admin"),
+      MovieController.deleteMovie
+    );
+    movieRouter.patch(
+      "/movie/update",
+      authMiddleware("admin"),
+      MovieController.updateMovie
+    );
     movieRouter.get("/movie", MovieController.getMovieById);
     movieRouter.get("/movie/list", MovieController.getAllMovies);
 
     const scheduleRouter = Router();
-    scheduleRouter.post("/schedule/create", ScheduleController.createSchedule);
+    scheduleRouter.post(
+      "/schedule/create",
+      authMiddleware("admin"),
+      ScheduleController.createSchedule
+    );
 
     const userRouter = Router();
     userRouter.post("/register", UserController.register);
@@ -25,7 +42,7 @@ const startServer = async () => {
 
     app.use(movieRouter);
     app.use(scheduleRouter);
-    app.use(userRouter)
+    app.use(userRouter);
 
     const PORT = 3001;
 
