@@ -2,12 +2,15 @@ import dayjs from "dayjs";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { PoolConnection } from "mysql2/promise";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const generateJwtToken = (userId: number, role: string): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const currentDate = new Date();
     const fiveMinutesLater = currentDate.setMinutes(
-      currentDate.getMinutes() + 5
+      currentDate.getMinutes() + 60
     );
 
     const payload = {
@@ -16,7 +19,7 @@ export const generateJwtToken = (userId: number, role: string): Promise<string> 
       exp: Math.floor(fiveMinutesLater / 1000),
     };
 
-    jwt.sign(payload, "1jdsij098_123.pwerj", (err, token) => {
+    jwt.sign(payload, process.env.JWT_KEYWORD as string, (err, token) => {
       if (err) {
         reject(err);
         return;
@@ -29,7 +32,7 @@ export const generateJwtToken = (userId: number, role: string): Promise<string> 
 
 export const verifyJwtToken = (token: string): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
-    jwt.verify(token, "1jdsij098_123.pwerj", (err, payload) => {
+    jwt.verify(token, process.env.JWT_KEYWORD as string, (err, payload) => {
       if (err) {
         reject(err);
         return;
