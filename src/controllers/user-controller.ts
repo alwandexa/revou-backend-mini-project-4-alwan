@@ -10,19 +10,9 @@ const UserController = {
       const createUserRequest = req.body as CreateUserRequest;
       const createUserReponse = await UserService.register(createUserRequest);
 
-      res.status(201).json({
-        data: createUserReponse,
-      });
-    } catch (e) {
-      let errorMessage = "server error";
-
-      if (e instanceof Error) {
-        errorMessage = e.message;
-      }
-
-      res.status(500).json({
-        error: errorMessage,
-      });
+      onSuccess(res, createUserReponse, "registered", 201);
+    } catch (error: any) {
+      onError(res, error.message);
     }
   },
   login: async (req: Request, res: Response) => {
@@ -30,7 +20,7 @@ const UserController = {
       const loginUserRequest = req.body as LoginUserRequest;
       const loginUserReponse = await UserService.login(loginUserRequest);
 
-      onSuccess(res, loginUserReponse, "logged in");
+      onSuccess(res, loginUserReponse, "logged in", 200);
     } catch (error: any) {
       onError(res, error.message);
     }
