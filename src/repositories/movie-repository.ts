@@ -54,46 +54,25 @@ const MovieRepository = {
           release_date: rows[0].release_date,
           runtime: rows[0].runtime,
           movie_status: rows[0].movie_status,
-          showtimes: rows[0].showtimes,
         };
 
         resolve(movie);
       });
     });
   },
-  deleteMovie: (deleteMovieRequest: DeleteMovieRequest): Promise<number> => {
-    return new Promise<number>((resolve, reject) => {
+  deleteMovie: async (deleteMovieRequest: DeleteMovieRequest): Promise<number> => {
       const query = `UPDATE movies SET deleted_at = now() WHERE movie_id = ${deleteMovieRequest.id}`;
 
-      pool.query<ResultSetHeader>(
-        query,
-        (err: QueryError, rows: ResultSetHeader) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve(rows.insertId);
-        }
-      );
-    });
+      const result = await pool.query<ResultSetHeader>(query);
+      
+      return result[0].affectedRows;
   },
-  updateMovie: (updateMovieRequest: UpdateMovieRequest): Promise<number> => {
-    return new Promise<number>((resolve, reject) => {
-      const query = `UPDATE movies SET title = '${updateMovieRequest.title}', director = '${updateMovieRequest.director}', release_date = '${updateMovieRequest.release_date}', runtime = ${updateMovieRequest.runtime}, movie_status = '${updateMovieRequest.movie_status}', updated_at = now() WHERE movie_id = ${updateMovieRequest.movie_id}`;
+  updateMovie: async (updateMovieRequest: UpdateMovieRequest) => {
+    const query = `UPDATE movies SET title = '${updateMovieRequest.title}', director = '${updateMovieRequest.director}', release_date = '${updateMovieRequest.release_date}', runtime = ${updateMovieRequest.runtime}, movie_status = '${updateMovieRequest.movie_status}', updated_at = now() WHERE movie_id = ${updateMovieRequest.movie_id}`;
 
-      pool.query<ResultSetHeader>(
-        query,
-        (err: QueryError, rows: ResultSetHeader) => {
-          if (err) {
-            reject(err);
-            return;
-          }
+    const result = await pool.query<ResultSetHeader>(query);
 
-          resolve(rows.insertId);
-        }
-      );
-    });
+    return result[0].affectedRows;
   },
 };
 
