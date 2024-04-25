@@ -3,6 +3,8 @@ import { PoolConnection } from "mysql2/promise";
 import {
   CreateScheduleRequest,
   CreateScheduleResponse,
+  UpdateScheduleRequest,
+  UpdateScheduleResponse,
 } from "../models/schedule-model";
 import { ScheduleRepository } from "../repositories/schedule-repository";
 
@@ -12,11 +14,29 @@ const ScheduleService = {
     connection: PoolConnection
   ): Promise<CreateScheduleResponse> => {
     const createdScheduleId = await ScheduleRepository.createSchedule(
-      createScheduleRequest, connection
+      createScheduleRequest,
+      connection
     );
 
     return {
       schedule_id: createdScheduleId.insertId,
+    };
+  },
+  updateSchedule: async (
+    createScheduleRequest: UpdateScheduleRequest,
+    connection: PoolConnection
+  ): Promise<UpdateScheduleResponse> => {
+    const affectedRowsCount = await ScheduleRepository.updateSchedule(
+      createScheduleRequest,
+      connection
+    );
+
+    if (affectedRowsCount === 0) {
+      throw new Error("Schedule not found");
+    }
+
+    return {
+      affectedRowsCount: affectedRowsCount,
     };
   },
 };
