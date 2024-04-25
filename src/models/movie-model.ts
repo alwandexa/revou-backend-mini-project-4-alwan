@@ -4,7 +4,6 @@ export interface MovieModel {
   release_date: Date;
   runtime: number;
   movie_status: string;
-  showtimes: Array<string>;
 }
 
 export interface CreateMovieRequest extends MovieModel {
