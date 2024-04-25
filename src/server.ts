@@ -1,8 +1,8 @@
 import express, { Router } from "express";
 
 import { MovieController } from "./controllers/movie-controller";
-import { ShowtimeController } from "./controllers/showtime-controller";
 import { ScheduleController } from "./controllers/schedule-controller";
+import { UserController } from "./controllers/user-controller";
 
 const startServer = async () => {
   try {
@@ -16,16 +16,16 @@ const startServer = async () => {
     movieRouter.get("/movie", MovieController.getMovieById);
     movieRouter.get("/movie/list", MovieController.getAllMovies);
 
-    const showtimeRouter = Router();
-    showtimeRouter.post("/showtime/add", ShowtimeController.createShowtime);
-    showtimeRouter.patch("/showtime/update", ShowtimeController.updateShowtime);
-
     const scheduleRouter = Router();
     scheduleRouter.post("/schedule/create", ScheduleController.createSchedule);
 
+    const userRouter = Router();
+    userRouter.post("/user/register", UserController.register);
+    userRouter.post("/user/login", UserController.login);
+
     app.use(movieRouter);
-    app.use(showtimeRouter);
     app.use(scheduleRouter);
+    app.use(userRouter)
 
     const PORT = 3001;
 
