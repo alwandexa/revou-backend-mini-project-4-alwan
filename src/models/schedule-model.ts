@@ -18,3 +18,12 @@ export interface UpdateScheduleRequest extends ScheduleModel {
 export interface UpdateScheduleResponse {
   affectedRowsCount : number;
 }
+
+export interface DeleteScheduleRequest extends ScheduleModel {
+  schedule_id : number;
+}
+
+export interface DeleteScheduleResponse {
+  affectedRowsCount : number;
+}
+

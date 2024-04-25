@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateScheduleRequest, UpdateScheduleRequest } from "../models/schedule-model";
+import { CreateScheduleRequest, DeleteScheduleRequest, UpdateScheduleRequest } from "../models/schedule-model";
 import { ScheduleService } from "../services/schedule-service";
 import { onError, onSuccess } from "../utils/util";
 import { pool } from "../lib/database";
@@ -28,7 +28,21 @@ const ScheduleController = {
         updateScheduleRequest, connection
       );
 
-      onSuccess(res, updateScheduleResponse, "Successfully updated", 201);
+      onSuccess(res, updateScheduleResponse, "Successfully updated", 200);
+    } catch (error: any) {
+      onError(res, error.message);
+    }
+  },
+  deleteSchedule: async (req: Request, res: Response) => {
+    const connection = await pool.getConnection();
+
+    try {
+      const deleteScheduleRequest = req.body as DeleteScheduleRequest;
+      const deleteScheduleResponse = await ScheduleService.deleteSchedule(
+        deleteScheduleRequest, connection
+      );
+
+      onSuccess(res, deleteScheduleResponse, "Successfully deleted", 200);
     } catch (error: any) {
       onError(res, error.message);
     }

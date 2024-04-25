@@ -27,6 +27,16 @@ const ScheduleRepository = {
 
     return result[0].affectedRows;
   },
+  deleteSchedule: async (
+    updateScheduleRequest: UpdateScheduleRequest,
+    connection: PoolConnection
+  ) => {
+    const query = `UPDATE schedules SET deleted_at = now() WHERE schedule_id = ${updateScheduleRequest.schedule_id}`;
+
+    const result = await connection.query<ResultSetHeader>(query);
+
+    return result[0].affectedRows;
+  },
 };
 
 export { ScheduleRepository };
