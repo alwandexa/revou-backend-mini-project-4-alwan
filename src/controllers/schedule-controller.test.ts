@@ -42,7 +42,7 @@ describe("ScheduleController", () => {
         movie_id: 1,
         studio_id: 1,
         showtime: "18:30",
-        show_date: now,
+        showdate: now,
       } as CreateScheduleRequest,
     };
     mockResponse = {
