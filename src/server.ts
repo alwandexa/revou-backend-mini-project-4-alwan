@@ -54,6 +54,11 @@ const startServer = async () => {
       auth("user"),
       BookingController.createBooking
     );
+    bookingRouter.post(
+      "/book/history",
+      auth("user"),
+      BookingController.getBookings
+    );
 
     app.use(movieRouter);
     app.use(scheduleRouter);
