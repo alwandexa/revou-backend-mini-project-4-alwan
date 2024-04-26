@@ -7,15 +7,12 @@ import { authMiddleware as auth } from "./middlewares/authorization";
 
 import movieRouter from "./routes/movie-router";
 import scheduleRouter from "./routes/schedule-router";
+import userRouter from "./routes/user-router";
 
 const startServer = async () => {
   try {
     const app = express();
     app.use(express.json());
-
-    const userRouter = Router();
-    userRouter.post("/register", UserController.register);
-    userRouter.post("/login", UserController.login);
 
     const bookingRouter = Router();
     bookingRouter.post(
