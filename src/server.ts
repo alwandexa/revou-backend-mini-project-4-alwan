@@ -3,7 +3,8 @@ import express, { Router } from "express";
 import { MovieController } from "./controllers/movie-controller";
 import { ScheduleController } from "./controllers/schedule-controller";
 import { UserController } from "./controllers/user-controller";
-import { authMiddleware } from "./middlewares/authorization";
+import { authMiddleware as auth } from "./middlewares/authorization";
+import { BookingController } from "./controllers/booking-controller";
 
 const startServer = async () => {
   try {
@@ -11,19 +12,15 @@ const startServer = async () => {
     app.use(express.json());
 
     const movieRouter = Router();
-    movieRouter.post(
-      "/movie/add",
-      authMiddleware("admin"),
-      MovieController.createMovie
-    );
+    movieRouter.post("/movie/add", auth("admin"), MovieController.createMovie);
     movieRouter.delete(
       "/movie/delete",
-      authMiddleware("admin"),
+      auth("admin"),
       MovieController.deleteMovie
     );
     movieRouter.patch(
       "/movie/update",
-      authMiddleware("admin"),
+      auth("admin"),
       MovieController.updateMovie
     );
     movieRouter.get("/movie", MovieController.getMovieById);
@@ -32,31 +29,36 @@ const startServer = async () => {
     const scheduleRouter = Router();
     scheduleRouter.post(
       "/schedule/create",
-      authMiddleware("admin"),
+      auth("admin"),
       ScheduleController.createSchedule
     );
     scheduleRouter.patch(
       "/schedule/update",
-      authMiddleware("admin"),
+      auth("admin"),
       ScheduleController.updateSchedule
     );
     scheduleRouter.delete(
       "/schedule/delete",
-      authMiddleware("admin"),
+      auth("admin"),
       ScheduleController.deleteSchedule
     );
-    scheduleRouter.get(
-      "/schedule/list",
-      ScheduleController.getSchedules
-    );
+    scheduleRouter.get("/schedule/list", ScheduleController.getSchedules);
 
     const userRouter = Router();
     userRouter.post("/register", UserController.register);
     userRouter.post("/login", UserController.login);
 
+    const bookingRouter = Router();
+    bookingRouter.post(
+      "/book/create",
+      auth("user"),
+      BookingController.createBooking
+    );
+
     app.use(movieRouter);
     app.use(scheduleRouter);
     app.use(userRouter);
+    app.use(bookingRouter);
 
     const PORT = 3001;
 
