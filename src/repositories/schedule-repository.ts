@@ -1,8 +1,9 @@
 import { ResultSetHeader } from "mysql2";
-import { PoolConnection } from "mysql2/promise";
+import { PoolConnection, RowDataPacket } from "mysql2/promise";
 
 import {
   CreateScheduleRequest,
+  GetScheduleResponse,
   UpdateScheduleRequest,
 } from "../models/schedule-model";
 
@@ -36,6 +37,34 @@ const ScheduleRepository = {
     const result = await connection.query<ResultSetHeader>(query);
 
     return result[0].affectedRows;
+  },
+  getAllSchedule: async (connection: PoolConnection) => {
+    const query = `SELECT DISTINCT 
+    s.schedule_id,
+    m.title,
+    m.runtime,
+    s2.name as studio_name,
+    s.showtime,
+    s.showdate 
+  FROM
+    schedules s
+  inner join movies m on
+    m.movie_id = s.movie_id
+  inner join studio s2 on
+    s2.studio_id = s.studio_id`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    const result: GetScheduleResponse[] = rows.map((value) => ({
+      schedule_id : value.schedule_id,
+      title: value.title,
+      runtime: value.runtime,
+      studio_name: value.studio_name,
+      showtime: value.showtime,
+      showdate: value.showdate,
+    }));
+
+    return result;
   },
 };
 

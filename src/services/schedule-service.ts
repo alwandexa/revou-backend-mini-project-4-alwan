@@ -5,6 +5,7 @@ import {
   CreateScheduleResponse,
   DeleteScheduleRequest,
   DeleteScheduleResponse,
+  GetScheduleResponse,
   UpdateScheduleRequest,
   UpdateScheduleResponse,
 } from "../models/schedule-model";
@@ -57,6 +58,17 @@ const ScheduleService = {
     return {
       affectedRowsCount: affectedRowsCount,
     };
+  },
+  getSchedules: async (
+    connection: PoolConnection
+  ): Promise<GetScheduleResponse[]> => {
+    const schedule = await ScheduleRepository.getAllSchedule(connection);
+
+    if (!schedule) {
+      throw new Error("Schedule not found");
+    }
+
+    return schedule;
   },
 };
 

@@ -12,18 +12,26 @@ export interface CreateScheduleResponse {
 }
 
 export interface UpdateScheduleRequest extends ScheduleModel {
-  schedule_id : number;
+  schedule_id: number;
 }
 
 export interface UpdateScheduleResponse {
-  affectedRowsCount : number;
+  affectedRowsCount: number;
 }
 
 export interface DeleteScheduleRequest extends ScheduleModel {
-  schedule_id : number;
+  schedule_id: number;
 }
 
 export interface DeleteScheduleResponse {
-  affectedRowsCount : number;
+  affectedRowsCount: number;
 }
 
+export interface GetScheduleResponse {
+  schedule_id: number;
+  title: string;
+  runtime: number;
+  studio_name: string;
+  showtime: string;
+  showdate: string;
+}

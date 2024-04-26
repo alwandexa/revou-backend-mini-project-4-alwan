@@ -45,6 +45,10 @@ const startServer = async () => {
       authMiddleware("admin"),
       ScheduleController.deleteSchedule
     );
+    scheduleRouter.get(
+      "/schedule/list",
+      ScheduleController.getSchedules
+    );
 
     const userRouter = Router();
     userRouter.post("/register", UserController.register);
