@@ -5,10 +5,13 @@ import scheduleRouter from "./routes/schedule-router";
 import userRouter from "./routes/user-router";
 import bookingRouter from "./routes/booking-router";
 
+import { logRequest } from "./middlewares/logger";
+
 const startServer = async () => {
   try {
     const app = express();
     app.use(express.json());
+    app.use(logRequest);
 
     app.use(movieRouter);
     app.use(scheduleRouter);
