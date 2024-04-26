@@ -1,30 +1,14 @@
-import express, { Router } from "express";
-
-import { UserController } from "./controllers/user-controller";
-import { BookingController } from "./controllers/booking-controller";
-
-import { authMiddleware as auth } from "./middlewares/authorization";
+import express from "express";
 
 import movieRouter from "./routes/movie-router";
 import scheduleRouter from "./routes/schedule-router";
 import userRouter from "./routes/user-router";
+import bookingRouter from "./routes/booking-router";
 
 const startServer = async () => {
   try {
     const app = express();
     app.use(express.json());
-
-    const bookingRouter = Router();
-    bookingRouter.post(
-      "/book/create",
-      auth("user"),
-      BookingController.createBooking
-    );
-    bookingRouter.post(
-      "/book/history",
-      auth("user"),
-      BookingController.getBookings
-    );
 
     app.use(movieRouter);
     app.use(scheduleRouter);
