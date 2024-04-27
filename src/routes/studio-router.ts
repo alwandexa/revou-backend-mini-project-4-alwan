@@ -14,5 +14,10 @@ studioRouter.patch(
   auth("admin"),
   StudioController.updateStudio
 );
+studioRouter.delete(
+  "/studio/delete",
+  auth("admin"),
+  StudioController.deleteStudio
+);
 
 export default studioRouter;

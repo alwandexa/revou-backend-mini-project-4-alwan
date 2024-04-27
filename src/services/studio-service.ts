@@ -1,5 +1,12 @@
 import { PoolConnection } from "mysql2/promise";
-import { CreateStudioRequest, CreateStudioResponse, UpdateStudioRequest, UpdateStudioResponse } from "../models/studio-model";
+import {
+  CreateStudioRequest,
+  CreateStudioResponse,
+  DeleteStudioRequest,
+  DeleteStudioResponse,
+  UpdateStudioRequest,
+  UpdateStudioResponse,
+} from "../models/studio-model";
 import { StudioRepository } from "../repositories/studio-repository";
 
 const StudioService = {
@@ -22,6 +29,19 @@ const StudioService = {
   ): Promise<UpdateStudioResponse> => {
     const affectedRowsCount = await StudioRepository.updateStudio(
       createStudioRequest,
+      connection
+    );
+
+    return {
+      affectedRowsCount: affectedRowsCount,
+    };
+  },
+  deleteStudio: async (
+    deleteStudioRequest: DeleteStudioRequest,
+    connection: PoolConnection
+  ): Promise<DeleteStudioResponse> => {
+    const affectedRowsCount = await StudioRepository.deleteStudio(
+      deleteStudioRequest,
       connection
     );
 

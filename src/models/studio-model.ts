@@ -13,3 +13,8 @@ export interface UpdateStudioRequest extends StudioModel {}
 export interface UpdateStudioResponse {
   affectedRowsCount: number;
 }
+
+export interface DeleteStudioRequest extends Pick<StudioModel, "studio_id"> {}
+export interface DeleteStudioResponse {
+  affectedRowsCount: number;
+}

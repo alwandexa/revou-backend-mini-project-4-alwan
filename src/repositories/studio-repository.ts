@@ -3,6 +3,7 @@ import { PoolConnection, RowDataPacket } from "mysql2/promise";
 
 import {
   CreateStudioRequest,
+  DeleteStudioRequest,
   UpdateStudioRequest,
 } from "../models/studio-model";
 
@@ -22,6 +23,20 @@ const StudioRepository = {
     connection: PoolConnection
   ) => {
     const query = `UPDATE studios SET name = '${updateStudioRequest.name}', capacity = ${updateStudioRequest.capacity}, updated_at = now() WHERE studio_id = ${updateStudioRequest.studio_id}`;
+
+    const result = await connection.query<ResultSetHeader>(query);
+
+    if (result[0].affectedRows === 0) {
+      throw new Error("Studio not found");
+    }
+
+    return result[0].affectedRows;
+  },
+  deleteStudio: async (
+    deleteStudioRequest: DeleteStudioRequest,
+    connection: PoolConnection
+  ) => {
+    const query = `UPDATE studios SET deleted_at = now() WHERE studio_id = ${deleteStudioRequest.studio_id}`;
 
     const result = await connection.query<ResultSetHeader>(query);
 
