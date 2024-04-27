@@ -9,5 +9,10 @@ studioRouter.post(
   auth("admin"),
   StudioController.createStudio
 );
+studioRouter.patch(
+  "/studio/update",
+  auth("admin"),
+  StudioController.updateStudio
+);
 
 export default studioRouter;

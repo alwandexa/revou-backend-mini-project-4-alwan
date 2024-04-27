@@ -1,5 +1,5 @@
 import { PoolConnection } from "mysql2/promise";
-import { CreateStudioRequest, CreateStudioResponse } from "../models/studio-model";
+import { CreateStudioRequest, CreateStudioResponse, UpdateStudioRequest, UpdateStudioResponse } from "../models/studio-model";
 import { StudioRepository } from "../repositories/studio-repository";
 
 const StudioService = {
@@ -14,6 +14,19 @@ const StudioService = {
 
     return {
       studio_id: createdScheduleId,
+    };
+  },
+  updateStudio: async (
+    createStudioRequest: UpdateStudioRequest,
+    connection: PoolConnection
+  ): Promise<UpdateStudioResponse> => {
+    const affectedRowsCount = await StudioRepository.updateStudio(
+      createStudioRequest,
+      connection
+    );
+
+    return {
+      affectedRowsCount: affectedRowsCount,
     };
   },
 };

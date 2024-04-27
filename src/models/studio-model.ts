@@ -7,3 +7,9 @@ export interface StudioModel {
 export interface CreateStudioRequest extends Omit<StudioModel, "studio_id"> {}
 
 export interface CreateStudioResponse extends Pick<StudioModel, "studio_id"> {}
+
+export interface UpdateStudioRequest extends StudioModel {}
+
+export interface UpdateStudioResponse {
+  affectedRowsCount: number;
+}
