@@ -1,5 +1,9 @@
 export interface StudioModel {
-    studio_id: number;
-    name : string;
-    capacity : number;
+  studio_id: number;
+  name: string;
+  capacity: number;
 }
+
+export interface CreateStudioRequest extends Omit<StudioModel, "studio_id"> {}
+
+export interface CreateStudioResponse extends Pick<StudioModel, "studio_id"> {}
