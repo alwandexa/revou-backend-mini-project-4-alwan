@@ -13,6 +13,9 @@ const UserService = {
   register: async (
     createUserRequest: CreateUserRequest
   ): Promise<CreateUserResponse> => {
+    if(createUserRequest.role === "admin"){
+      
+    }
     const hashedPassword = await bcrypt.hash(createUserRequest.password, 10);
     const createdUserId = await UserRepository.createUser({
       email: createUserRequest.email,

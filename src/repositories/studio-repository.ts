@@ -4,6 +4,7 @@ import { PoolConnection, RowDataPacket } from "mysql2/promise";
 import {
   CreateStudioRequest,
   DeleteStudioRequest,
+  GetAllStudiosResponse,
   UpdateStudioRequest,
 } from "../models/studio-model";
 
@@ -45,6 +46,19 @@ const StudioRepository = {
     }
 
     return result[0].affectedRows;
+  },
+  getAllStudios: async (connection: PoolConnection) => {
+    const query = `SELECT studio_id, name, capacity FROM studios WHERE deleted_at IS NULL ORDER BY name ASC`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    const result: GetAllStudiosResponse[] = rows.map((value) => ({
+      studio_id: value.studio_id,
+      name: value.name,
+      capacity: value.capacity,
+    }));
+
+    return result;
   },
 };
 

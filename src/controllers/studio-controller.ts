@@ -73,6 +73,23 @@ const StudioController = {
       onError(res, error.message, connection);
     }
   },
+  getAllStudios: async (req: Request, res: Response) => {
+    const connection = await pool.getConnection();
+
+    try {
+      const getStudiosResponse = await StudioService.getAllStudios(connection);
+
+      onSuccess(
+        res,
+        getStudiosResponse,
+        "Successfully fetched",
+        200,
+        connection
+      );
+    } catch (error: any) {
+      onError(res, error.message, connection);
+    }
+  },
 };
 
 export { StudioController };

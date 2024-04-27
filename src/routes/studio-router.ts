@@ -19,5 +19,6 @@ studioRouter.delete(
   auth("admin"),
   StudioController.deleteStudio
 );
+studioRouter.get("/studio/list", auth("admin"), StudioController.getAllStudios);
 
 export default studioRouter;

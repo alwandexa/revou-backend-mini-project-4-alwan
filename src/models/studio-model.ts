@@ -15,6 +15,9 @@ export interface UpdateStudioResponse {
 }
 
 export interface DeleteStudioRequest extends Pick<StudioModel, "studio_id"> {}
+
 export interface DeleteStudioResponse {
   affectedRowsCount: number;
 }
+
+export interface GetAllStudiosResponse extends StudioModel {}

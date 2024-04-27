@@ -4,6 +4,7 @@ import {
   CreateStudioResponse,
   DeleteStudioRequest,
   DeleteStudioResponse,
+  GetAllStudiosResponse,
   UpdateStudioRequest,
   UpdateStudioResponse,
 } from "../models/studio-model";
@@ -48,6 +49,13 @@ const StudioService = {
     return {
       affectedRowsCount: affectedRowsCount,
     };
+  },
+  getAllStudios: async (
+    connection: PoolConnection
+  ): Promise<GetAllStudiosResponse[]> => {
+    const schedule = await StudioRepository.getAllStudios(connection);
+
+    return schedule;
   },
 };
 
