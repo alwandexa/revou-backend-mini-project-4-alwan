@@ -47,6 +47,8 @@ const MovieService = {
     getMovieByIdRequest: GetMovieDetailRequest,
     connection: PoolConnection
   ): Promise<GetMovieDetailResponse> => {
+    validateRequiredKeys(getMovieByIdRequest, ["movie_id"]);
+
     const movie = await MovieRepository.getMovieById(
       getMovieByIdRequest,
       connection
@@ -58,6 +60,8 @@ const MovieService = {
     deleteMovieRequest: DeleteMovieRequest,
     connection: PoolConnection
   ): Promise<DeleteMovieResponse> => {
+    validateRequiredKeys(deleteMovieRequest, ["movie_id"]);
+
     const deletedMovie = await MovieRepository.deleteMovie(
       deleteMovieRequest,
       connection
@@ -71,6 +75,15 @@ const MovieService = {
     updateMovieRequest: UpdateMovieRequest,
     connection: PoolConnection
   ): Promise<UpdateMovieResponse> => {
+    validateRequiredKeys(updateMovieRequest, [
+      "movie_id",
+      "title",
+      "director",
+      "release_date",
+      "runtime",
+      "movie_status",
+    ]);
+
     const updatedMovie = await MovieRepository.updateMovie(
       updateMovieRequest,
       connection
