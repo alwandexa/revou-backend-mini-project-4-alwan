@@ -27,6 +27,10 @@ const ScheduleRepository = {
 
     const result = await connection.query<ResultSetHeader>(query);
 
+    if (result[0].affectedRows === 0) {
+      throw new Error("Schedule not found");
+    }
+
     return result[0].affectedRows;
   },
   deleteSchedule: async (

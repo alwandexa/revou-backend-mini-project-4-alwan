@@ -33,11 +33,7 @@ const ScheduleService = {
       createScheduleRequest,
       connection
     );
-
-    if (affectedRowsCount === 0) {
-      throw new Error("Schedule not found");
-    }
-
+    
     return {
       affectedRowsCount: affectedRowsCount,
     };
