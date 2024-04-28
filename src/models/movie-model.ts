@@ -1,4 +1,5 @@
 export interface MovieModel {
+  movie_id: number;
   title: string;
   director: string;
   release_date: Date;
@@ -6,39 +7,25 @@ export interface MovieModel {
   movie_status: string;
 }
 
-export interface CreateMovieRequest extends MovieModel {
-  genres: Array<string>;
-}
+export interface CreateMovieRequest extends Omit<MovieModel, "movie_id"> {}
 
-export interface CreateMovieResponse {
-  id: number;
-}
+export interface CreateMovieResponse extends Pick<MovieModel, "movie_id"> {}
 
-export interface DeleteMovieRequest {
-  id: number;
-}
+export interface DeleteMovieRequest extends Pick<MovieModel, "movie_id"> {}
 
 export interface DeleteMovieResponse {
-  id: number;
+  affectedRowsCount: number;
 }
 
-export interface UpdateMovieRequest extends MovieModel {
-  movie_id: number;
-}
+export interface UpdateMovieRequest extends MovieModel {}
 
 export interface UpdateMovieResponse {
-  id: number;
+  affectedRowsCount: number;
 }
 
-export interface GetMovieDetailRequest {
-  movie_id: number;
-}
+export interface GetMovieDetailRequest extends Pick<MovieModel, "movie_id"> {}
 
 export interface GetMovieDetailResponse extends MovieModel {}
 
-export interface GetAllMoviesResponse  {
-  movie_id : number
-  title : string
-  director : string
-}
-
+export interface GetAllMoviesResponse
+  extends Pick<MovieModel, "movie_id" | "title" | "director"> {}

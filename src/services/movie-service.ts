@@ -1,3 +1,5 @@
+import { PoolConnection } from "mysql2/promise";
+
 import {
   CreateMovieRequest,
   CreateMovieResponse,
@@ -10,62 +12,72 @@ import {
   GetAllMoviesResponse,
 } from "../models/movie-model";
 import { MovieRepository } from "../repositories/movie-repository";
+import { validateRequiredKeys } from "../utils/util";
 
 const MovieService = {
   createMovie: async (
-    createMovieRequest: CreateMovieRequest
+    createMovieRequest: CreateMovieRequest,
+    connection: PoolConnection
   ): Promise<CreateMovieResponse> => {
-    const createdMovieId = await MovieRepository.createMovie({
-      title: createMovieRequest.title,
-      director: createMovieRequest.director,
-      release_date: createMovieRequest.release_date,
-      runtime: createMovieRequest.runtime,
-      movie_status: createMovieRequest.movie_status,
-    });
+    validateRequiredKeys(createMovieRequest, [
+      "title",
+      "director",
+      "release_date",
+      "runtime",
+      "movie_status",
+    ]);
+
+    const createdMovieId = await MovieRepository.createMovie(
+      createMovieRequest,
+      connection
+    );
 
     return {
-      id: createdMovieId,
+      movie_id: createdMovieId,
     };
   },
-  getAllMovies: async (): Promise<GetAllMoviesResponse[]> => {
-    const movies = await MovieRepository.getAllMovies();
+  getAllMovies: async (
+    connection: PoolConnection
+  ): Promise<GetAllMoviesResponse[]> => {
+    const movies = await MovieRepository.getAllMovies(connection);
 
     return movies;
   },
   getMovieById: async (
-    getMovieByIdRequest: GetMovieDetailRequest
+    getMovieByIdRequest: GetMovieDetailRequest,
+    connection: PoolConnection
   ): Promise<GetMovieDetailResponse> => {
-    const movie = await MovieRepository.getMovieById({
-      movie_id: getMovieByIdRequest.movie_id,
-    });
+    const movie = await MovieRepository.getMovieById(
+      getMovieByIdRequest,
+      connection
+    );
 
     return movie;
   },
   deleteMovie: async (
-    deleteMovieRequest: DeleteMovieRequest
+    deleteMovieRequest: DeleteMovieRequest,
+    connection: PoolConnection
   ): Promise<DeleteMovieResponse> => {
-    const deletedMovieId = await MovieRepository.deleteMovie({
-      id: deleteMovieRequest.id,
-    });
+    const deletedMovie = await MovieRepository.deleteMovie(
+      deleteMovieRequest,
+      connection
+    );
 
     return {
-      id: deletedMovieId,
+      affectedRowsCount: deletedMovie,
     };
   },
   updateMovie: async (
-    updateMovieRequest: UpdateMovieRequest
+    updateMovieRequest: UpdateMovieRequest,
+    connection: PoolConnection
   ): Promise<UpdateMovieResponse> => {
-    const updatedMovieId = await MovieRepository.updateMovie({
-      movie_id: updateMovieRequest.movie_id,
-      title: updateMovieRequest.title,
-      director: updateMovieRequest.director,
-      release_date: updateMovieRequest.release_date,
-      runtime: updateMovieRequest.runtime,
-      movie_status: updateMovieRequest.movie_status,
-    });
+    const updatedMovie = await MovieRepository.updateMovie(
+      updateMovieRequest,
+      connection
+    );
 
     return {
-      id: updatedMovieId,
+      affectedRowsCount: updatedMovie,
     };
   },
 };

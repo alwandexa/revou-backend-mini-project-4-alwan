@@ -7,7 +7,7 @@ import {
   UpdateMovieRequest,
 } from "../models/movie-model";
 import { MovieService } from "../services/movie-service";
-import { onError } from "../utils/util";
+import { onError, onSuccess } from "../utils/util";
 import { pool } from "../lib/database";
 
 const MovieController = {
@@ -17,14 +17,17 @@ const MovieController = {
     try {
       const createMovieRequest = req.body as CreateMovieRequest;
       const createMovieResponse = await MovieService.createMovie(
-        createMovieRequest
+        createMovieRequest,
+        connection
       );
 
-      res.status(201).json({
-        success: true,
-        data: createMovieResponse,
-        message: "successfully created",
-      });
+      onSuccess(
+        res,
+        createMovieResponse,
+        "Successfully created",
+        201,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
@@ -33,13 +36,15 @@ const MovieController = {
     const connection = await pool.getConnection();
 
     try {
-      const getAllMoviesResponse = await MovieService.getAllMovies();
+      const getAllMoviesResponse = await MovieService.getAllMovies(connection);
 
-      res.status(200).json({
-        success: true,
-        data: getAllMoviesResponse,
-        message: "successfully fetched",
-      });
+      onSuccess(
+        res,
+        getAllMoviesResponse,
+        "Successfully fetched",
+        200,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
@@ -49,13 +54,12 @@ const MovieController = {
 
     try {
       const getMovieRequest = req.body as GetMovieDetailRequest;
-      const getMovieResponse = await MovieService.getMovieById(getMovieRequest);
+      const getMovieResponse = await MovieService.getMovieById(
+        getMovieRequest,
+        connection
+      );
 
-      res.status(200).json({
-        success: true,
-        data: getMovieResponse,
-        message: "successfully fetched",
-      });
+      onSuccess(res, getMovieResponse, "Successfully fetched", 200, connection);
     } catch (error: any) {
       onError(res, error.message, connection);
     }
@@ -66,32 +70,38 @@ const MovieController = {
     try {
       const deleteMovieRequest = req.body as DeleteMovieRequest;
       const deleteMovieResponse = await MovieService.deleteMovie(
-        deleteMovieRequest
+        deleteMovieRequest,
+        connection
       );
 
-      res.status(200).json({
-        success: true,
-        data: deleteMovieResponse,
-        message: "successfully deleted",
-      });
+      onSuccess(
+        res,
+        deleteMovieResponse,
+        "Successfully deleted",
+        200,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
   },
   updateMovie: async (req: Request, res: Response) => {
     const connection = await pool.getConnection();
-    
+
     try {
       const updateMovieRequest = req.body as UpdateMovieRequest;
       const updateMovieResponse = await MovieService.updateMovie(
-        updateMovieRequest
+        updateMovieRequest,
+        connection
       );
 
-      res.status(200).json({
-        success: true,
-        data: updateMovieResponse,
-        message: "successfully updated",
-      });
+      onSuccess(
+        res,
+        updateMovieResponse,
+        "Successfully updated",
+        200,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
