@@ -1,27 +1,24 @@
 export interface ScheduleModel {
+  schedule_id: number;
   movie_id: number;
   studio_id: number;
   showtime: string;
   showdate: Date;
 }
 
-export interface CreateScheduleRequest extends ScheduleModel {}
+export interface CreateScheduleRequest
+  extends Omit<ScheduleModel, "schedule_id"> {}
 
-export interface CreateScheduleResponse {
-  schedule_id: number;
-}
+export interface CreateScheduleResponse
+  extends Pick<ScheduleModel, "schedule_id"> {}
 
-export interface UpdateScheduleRequest extends ScheduleModel {
-  schedule_id: number;
-}
+export interface UpdateScheduleRequest extends ScheduleModel {}
 
 export interface UpdateScheduleResponse {
   affectedRowsCount: number;
 }
 
-export interface DeleteScheduleRequest extends ScheduleModel {
-  schedule_id: number;
-}
+export interface DeleteScheduleRequest extends Pick<ScheduleModel, "schedule_id"> {}
 
 export interface DeleteScheduleResponse {
   affectedRowsCount: number;

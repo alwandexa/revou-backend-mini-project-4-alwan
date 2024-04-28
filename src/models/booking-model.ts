@@ -11,9 +11,7 @@ export interface CreateBookingRequest
 export interface CreateBookingResponse
   extends Pick<BookingModel, "booking_id"> {}
 
-export interface GetBookingHistoryRequest {
-  user_id: number;
-}
+export interface GetBookingHistoryRequest extends Pick<BookingModel, "user_id"> {}
 
 export interface GetBookingHistoryResponse {
   title: string;

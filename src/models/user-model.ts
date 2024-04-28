@@ -7,22 +7,12 @@ export interface UserModel {
   role: string;
 }
 
-export interface CreateUserRequest {
-  email: string;
-  password: string;
-  name: string;
-  birthdate: Date;
-  role: string;
-}
+export interface CreateUserRequest extends Omit<UserModel, "user_id"> {}
 
-export interface CreateUserResponse {
-  user_id: number;
-}
+export interface CreateUserResponse extends Pick<UserModel, "user_id"> {}
 
-export interface LoginUserRequest {
-  email: string;
-  password: string;
-}
+export interface LoginUserRequest
+  extends Pick<UserModel, "email" | "password"> {}
 
 export interface LoginUserResponse {
   token: string;
