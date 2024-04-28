@@ -19,9 +19,9 @@ const BookingController = {
         connection
       );
 
-      onSuccess(res, createBookingResponse, "Successfully created", 201);
+      onSuccess(res, createBookingResponse, "Successfully created", 201, connection);
     } catch (error: any) {
-      onError(res, error.message);
+      onError(res, error.message, connection);
     }
   },
   getBookings: async (req: Request, res: Response) => {
@@ -34,9 +34,9 @@ const BookingController = {
         connection
       );
 
-      onSuccess(res, getBookingsResponse, "Successfully retrieved", 200);
+      onSuccess(res, getBookingsResponse, "Successfully retrieved", 200, connection);
     } catch (error: any) {
-      onError(res, error.message);
+      onError(res, error.message, connection);
     }
   },
 };
