@@ -3,6 +3,7 @@ import { PoolConnection, RowDataPacket } from "mysql2/promise";
 
 import {
   CreateScheduleRequest,
+  DeleteScheduleRequest,
   GetScheduleResponse,
   UpdateScheduleRequest,
 } from "../models/schedule-model";
@@ -29,7 +30,7 @@ const ScheduleRepository = {
     return result[0].affectedRows;
   },
   deleteSchedule: async (
-    updateScheduleRequest: UpdateScheduleRequest,
+    updateScheduleRequest: DeleteScheduleRequest,
     connection: PoolConnection
   ) => {
     const query = `UPDATE schedules SET deleted_at = now() WHERE schedule_id = ${updateScheduleRequest.schedule_id}`;
