@@ -12,6 +12,8 @@ const BookingController = {
   createBooking: async (req: Request, res: Response) => {
     const connection = await pool.getConnection();
 
+    connection.beginTransaction();
+
     try {
       const createBookingRequest = req.body as CreateBookingRequest;
       const createBookingResponse = await BookingService.create(
@@ -19,7 +21,13 @@ const BookingController = {
         connection
       );
 
-      onSuccess(res, createBookingResponse, "Successfully created", 201, connection);
+      onSuccess(
+        res,
+        createBookingResponse,
+        "Successfully created",
+        201,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
@@ -34,7 +42,13 @@ const BookingController = {
         connection
       );
 
-      onSuccess(res, getBookingsResponse, "Successfully retrieved", 200, connection);
+      onSuccess(
+        res,
+        getBookingsResponse,
+        "Successfully retrieved",
+        200,
+        connection
+      );
     } catch (error: any) {
       onError(res, error.message, connection);
     }
