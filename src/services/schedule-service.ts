@@ -10,12 +10,71 @@ import {
   UpdateScheduleResponse,
 } from "../models/schedule-model";
 import { ScheduleRepository } from "../repositories/schedule-repository";
+import { MovieRepository } from "../repositories/movie-repository";
+
+const validateShowtime = (
+  existingShowtimes: string[],
+  newShowtime: string,
+  movieDuration: number
+): boolean => {
+  const parseTime = (timeStr: string) => {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const newShowtimeMinutes = parseTime(newShowtime);
+  const movieDurationHours = Math.floor(movieDuration / 60);
+  const movieDurationMinutes = movieDuration % 60;
+  const newShowtimeEndMinutes = newShowtimeMinutes + movieDuration;
+
+  for (const existingShowtime of existingShowtimes) {
+    const existingShowtimeMinutes = parseTime(existingShowtime);
+    const existingShowtimeEndMinutes =
+      existingShowtimeMinutes + movieDurationHours * 60 + movieDurationMinutes;
+
+    if (
+      (newShowtimeMinutes >= existingShowtimeMinutes &&
+        newShowtimeMinutes < existingShowtimeEndMinutes) ||
+      (newShowtimeEndMinutes > existingShowtimeMinutes &&
+        newShowtimeEndMinutes <= existingShowtimeEndMinutes)
+    ) {
+      // Overlap detected
+      return false;
+    }
+  }
+
+  // No overlap
+  return true;
+};
 
 const ScheduleService = {
   createSchedule: async (
     createScheduleRequest: CreateScheduleRequest,
     connection: PoolConnection
   ): Promise<CreateScheduleResponse> => {
+    const movie = await MovieRepository.getMovieById(
+      { movie_id: createScheduleRequest.movie_id },
+      connection
+    );
+
+    const showtimes = await ScheduleRepository.getShowtimes(
+      {
+        studio_id: movie.movie_id,
+        showdate: createScheduleRequest.showdate,
+      },
+      connection
+    );
+
+    if (
+      !validateShowtime(
+        showtimes,
+        createScheduleRequest.showtime,
+        movie.runtime
+      )
+    ) {
+      throw Error("Schedule Overlapped");
+    }
+
     const createdScheduleId = await ScheduleRepository.createSchedule(
       createScheduleRequest,
       connection
@@ -33,7 +92,7 @@ const ScheduleService = {
       createScheduleRequest,
       connection
     );
-    
+
     return {
       affectedRowsCount: affectedRowsCount,
     };
