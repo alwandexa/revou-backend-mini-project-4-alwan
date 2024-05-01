@@ -56,7 +56,7 @@ const ScheduleRepository = {
     schedules s
   inner join movies m on
     m.movie_id = s.movie_id
-  inner join studio s2 on
+  inner join studios s2 on
     s2.studio_id = s.studio_id
   where s.schedule_id = ${schedule_id}`;
 
@@ -80,7 +80,7 @@ const ScheduleRepository = {
     schedules s
   inner join movies m on
     m.movie_id = s.movie_id
-  inner join studio s2 on
+  inner join studios s2 on
     s2.studio_id = s.studio_id
   where s.deleted_at IS NULL`;
 
