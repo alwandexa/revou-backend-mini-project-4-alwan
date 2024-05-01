@@ -96,6 +96,17 @@ const ScheduleRepository = {
 
     return result;
   },
+  lockSchedule: async (schedule_id: number, connection: PoolConnection) => {
+    const query = `SELECT schedule_id, studio_id FROM schedules WHERE schedule_id = ${schedule_id} FOR UPDATE`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    if (rows.length === 0) {
+      throw new Error("Schedule not found");
+    }
+
+    return rows[0];
+  },
 };
 
 export { ScheduleRepository };
