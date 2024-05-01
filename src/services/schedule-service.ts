@@ -11,6 +11,7 @@ import {
 } from "../models/schedule-model";
 import { ScheduleRepository } from "../repositories/schedule-repository";
 import { MovieRepository } from "../repositories/movie-repository";
+import { validateRequiredKeys } from "../utils/util";
 
 const validateShowtime = (
   existingShowtimes: string[],
@@ -52,6 +53,12 @@ const ScheduleService = {
     createScheduleRequest: CreateScheduleRequest,
     connection: PoolConnection
   ): Promise<CreateScheduleResponse> => {
+    validateRequiredKeys(createScheduleRequest, [
+      "movie_id",
+      "studio_id",
+      "showtime",
+      "showdate",
+    ]);
     const movie = await MovieRepository.getMovieById(
       { movie_id: createScheduleRequest.movie_id },
       connection
