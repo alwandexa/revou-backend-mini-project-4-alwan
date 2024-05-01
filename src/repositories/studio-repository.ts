@@ -60,6 +60,17 @@ const StudioRepository = {
 
     return result;
   },
+  getStudioById: async (studioId: number, connection: PoolConnection) => {
+    const query = `SELECT studio_id, name, capacity FROM studio WHERE studio_id = ${studioId}`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    if (rows.length === 0) {
+      throw new Error("Studio not found");
+    }
+
+    return rows[0];
+  },
 };
 
 export { StudioRepository };
