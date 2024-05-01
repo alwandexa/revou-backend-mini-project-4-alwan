@@ -12,7 +12,10 @@ import {
 } from "../models/movie-model";
 
 const MovieRepository = {
-  createMovie: async (createMovieRequest: CreateMovieRequest, connection: PoolConnection) => {
+  createMovie: async (
+    createMovieRequest: CreateMovieRequest,
+    connection: PoolConnection
+  ) => {
     const query = `INSERT INTO movies(title, director, release_date, runtime, movie_status) values('${createMovieRequest.title}', '${createMovieRequest.director}', '${createMovieRequest.release_date}', ${createMovieRequest.runtime}, '${createMovieRequest.movie_status}')`;
 
     const result = await connection.query<ResultSetHeader>(query);
@@ -20,7 +23,8 @@ const MovieRepository = {
     return result[0].insertId;
   },
   getAllMovies: async (connection: PoolConnection) => {
-    const query = "SELECT movie_id, title, director FROM movies";
+    const query =
+      "SELECT movie_id, title, director FROM movies WHERE deleted_at IS NULL";
 
     const [rows] = await connection.query<RowDataPacket[]>(query);
 
