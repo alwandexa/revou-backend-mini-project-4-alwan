@@ -4,7 +4,7 @@ import { PoolConnection, RowDataPacket } from "mysql2/promise";
 import {
   CreateScheduleRequest,
   DeleteScheduleRequest,
-  GetLastShowtimeRequest,
+  GetShowtimes,
   GetScheduleResponse,
   UpdateScheduleRequest,
 } from "../models/schedule-model";
@@ -109,10 +109,10 @@ const ScheduleRepository = {
     return rows[0];
   },
   getShowtimes: async (
-    getLastShowtimeRequest: GetLastShowtimeRequest,
+    getShowtimes: GetShowtimes,
     connection: PoolConnection
   ) => {
-    const query = `select TIME_FORMAT(showtime, '%H:%i') as showtime from schedules s WHERE studio_id = ${getLastShowtimeRequest.studio_id} AND showdate = '${getLastShowtimeRequest.showdate}' ORDER BY showtime`;
+    const query = `select TIME_FORMAT(showtime, '%H:%i') as showtime from schedules s WHERE studio_id = ${getShowtimes.studio_id} AND showdate = '${getShowtimes.showdate}' ORDER BY showtime`;
 
     const [rows] = await connection.query<RowDataPacket[]>(query);
 

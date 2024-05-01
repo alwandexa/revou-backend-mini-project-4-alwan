@@ -3,7 +3,7 @@ export interface ScheduleModel {
   movie_id: number;
   studio_id: number;
   showtime: string;
-  showdate: Date;
+  showdate: string;
 }
 
 export interface CreateScheduleRequest
@@ -18,7 +18,8 @@ export interface UpdateScheduleResponse {
   affectedRowsCount: number;
 }
 
-export interface DeleteScheduleRequest extends Pick<ScheduleModel, "schedule_id"> {}
+export interface DeleteScheduleRequest
+  extends Pick<ScheduleModel, "schedule_id"> {}
 
 export interface DeleteScheduleResponse {
   affectedRowsCount: number;
@@ -30,5 +31,10 @@ export interface GetScheduleResponse {
   runtime: number;
   studio_name: string;
   showtime: string;
+  showdate: string;
+}
+
+export interface GetShowtimes {
+  studio_id: number;
   showdate: string;
 }
