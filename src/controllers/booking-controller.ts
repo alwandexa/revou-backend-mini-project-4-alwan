@@ -5,7 +5,7 @@ import {
   CreateBookingRequest,
   GetBookingHistoryRequest,
 } from "../models/booking-model";
-import { onError, onSuccess } from "../utils/util";
+import { onError, onSuccess, verifyJwtToken } from "../utils/util";
 import { pool } from "../lib/database";
 
 const BookingController = {
@@ -15,7 +15,13 @@ const BookingController = {
     connection.beginTransaction();
 
     try {
-      const createBookingRequest = req.body as CreateBookingRequest;
+      const token = req.headers.authorization?.split(" ")[1];
+      const decoded = token ? await verifyJwtToken(token) : undefined;
+
+      let createBookingRequest = req.body as CreateBookingRequest;
+
+      createBookingRequest.user_id = decoded.sub;
+
       const createBookingResponse = await BookingService.create(
         createBookingRequest,
         connection
