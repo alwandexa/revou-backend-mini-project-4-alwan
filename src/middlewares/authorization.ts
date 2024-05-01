@@ -12,7 +12,9 @@ export const authMiddleware = (role: string) => {
     try {
       const decoded = await verifyJwtToken(token);
 
-      if (decoded.role !== role) {
+      if (decoded.role === "admin") {
+        next();
+      } else if (decoded.role !== role) {
         return res.status(200).json({ message: "Not authorized" });
       }
 
