@@ -43,6 +43,30 @@ const ScheduleRepository = {
 
     return result[0].affectedRows;
   },
+  getScheduleById: async (schedule_id: number, connection: PoolConnection) => {
+    const query = `SELECT DISTINCT 
+    s.schedule_id,
+    m.title,
+    m.runtime,
+    s2.name as studio_name,
+    s.showtime,
+    s.showdate 
+  FROM
+    schedules s
+  inner join movies m on
+    m.movie_id = s.movie_id
+  inner join studio s2 on
+    s2.studio_id = s.studio_id
+  where s.schedule_id = ${schedule_id}`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    if (rows.length === 0) {
+      throw new Error("Schedule not found");
+    }
+
+    return rows[0];
+  },
   getAllSchedule: async (connection: PoolConnection) => {
     const query = `SELECT DISTINCT 
     s.schedule_id,
@@ -56,12 +80,13 @@ const ScheduleRepository = {
   inner join movies m on
     m.movie_id = s.movie_id
   inner join studio s2 on
-    s2.studio_id = s.studio_id`;
+    s2.studio_id = s.studio_id
+  where s.deleted_at IS NULL`;
 
     const [rows] = await connection.query<RowDataPacket[]>(query);
 
     const result: GetScheduleResponse[] = rows.map((value) => ({
-      schedule_id : value.schedule_id,
+      schedule_id: value.schedule_id,
       title: value.title,
       runtime: value.runtime,
       studio_name: value.studio_name,
