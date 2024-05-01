@@ -5,7 +5,7 @@ import { pool } from "../lib/database";
 
 const UserRepository = {
   createUser: async (userModel: CreateUserRequest) => {
-    const query = `INSERT INTO users(email, password, name, role, birthdate) values('${userModel.email}', '${userModel.password}', '${userModel.name}', '${userModel.role}', '${userModel.birthdate}')`;
+    const query = `INSERT INTO users(email, password, name, role, birthdate) values('${userModel.email}', '${userModel.password}', '${userModel.name}', 'user', '${userModel.birthdate}')`;
 
     const result = await pool.query<ResultSetHeader>(query);
 
