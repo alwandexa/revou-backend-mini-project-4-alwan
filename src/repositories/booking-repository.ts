@@ -51,6 +51,22 @@ const BookingRepository = {
 
     return result;
   },
+  getScheduleBookingAmount: async (
+    scheduleId: number,
+    connection: PoolConnection
+  ) => {
+    const query = `select
+    sum(b.amount) as amount,
+    b.schedule_id
+  from
+    bookings b
+  where
+    b.schedule_id = ${scheduleId};`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    return rows[0].amount;
+  },
 };
 
 export { BookingRepository };
