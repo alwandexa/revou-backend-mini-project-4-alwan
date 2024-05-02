@@ -4,7 +4,7 @@
   "description": "revou's restful api mini project",
   "scripts": {
     "test": "jest --coverage",
-    "start": "bun ./src/server.ts",
+    "start": "npm ./src/server.ts",
     "start:watch": "nodemon",
     "build": "tsc"
   },
@@ -55,7 +55,7 @@
     "watch": [
       "src"
     ],
-    "exec": "bun start",
+    "exec": "npm start",
     "ext": "ts"
   }
 }
