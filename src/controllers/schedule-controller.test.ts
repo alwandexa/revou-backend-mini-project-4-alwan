@@ -219,4 +219,48 @@ describe("ScheduleController", () => {
       );
     });
   });
+
+  describe("getSchedule", () => {
+    mockRequest = {
+      body: {},
+    };
+
+    it("should get all schedules successfully", async () => {
+      (ScheduleService.getSchedules as jest.Mock).mockResolvedValue({});
+
+      await ScheduleController.getSchedules(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when get all schedules", async () => {
+      const mockError = new Error();
+      (ScheduleService.getSchedules as jest.Mock).mockRejectedValue(mockError);
+
+      await ScheduleController.getSchedules(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
 });
