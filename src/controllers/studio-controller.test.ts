@@ -131,4 +131,44 @@ describe("Movie Controller", () => {
       );
     });
   });
+
+  describe("Delete Schedule", () => {
+    it("should delete a schedule successfully", async () => {
+      (StudioService.deleteStudio as jest.Mock).mockResolvedValue({});
+
+      await StudioController.deleteStudio(
+        {} as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when delete schedule", async () => {
+      const mockError = new Error();
+      (StudioService.deleteStudio as jest.Mock).mockRejectedValue(mockError);
+
+      await StudioController.deleteStudio(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
 });
