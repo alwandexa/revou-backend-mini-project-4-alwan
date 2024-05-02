@@ -92,8 +92,8 @@ describe("Movie Controller", () => {
     });
   });
 
-  describe("Update Schedule", () => {
-    it("should update a schedule successfully", async () => {
+  describe("Update Studio", () => {
+    it("should update a studio successfully", async () => {
       (StudioService.updateStudio as jest.Mock).mockResolvedValue({});
 
       await StudioController.updateStudio(
@@ -112,7 +112,7 @@ describe("Movie Controller", () => {
       );
     });
 
-    it("should handle errors when update schedule", async () => {
+    it("should handle errors when update studio", async () => {
       const mockError = new Error();
       (StudioService.updateStudio as jest.Mock).mockRejectedValue(mockError);
 
@@ -132,8 +132,8 @@ describe("Movie Controller", () => {
     });
   });
 
-  describe("Delete Schedule", () => {
-    it("should delete a schedule successfully", async () => {
+  describe("Delete Studio", () => {
+    it("should delete a studio successfully", async () => {
       (StudioService.deleteStudio as jest.Mock).mockResolvedValue({});
 
       await StudioController.deleteStudio(
@@ -152,11 +152,51 @@ describe("Movie Controller", () => {
       );
     });
 
-    it("should handle errors when delete schedule", async () => {
+    it("should handle errors when delete studio", async () => {
       const mockError = new Error();
       (StudioService.deleteStudio as jest.Mock).mockRejectedValue(mockError);
 
       await StudioController.deleteStudio(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
+
+  describe("Get Schedules", () => {
+    it("should get all schedules successfully", async () => {
+      (StudioService.getAllStudios as jest.Mock).mockResolvedValue({});
+
+      await StudioController.getAllStudios(
+        {} as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when get all schedules", async () => {
+      const mockError = new Error();
+      (StudioService.getAllStudios as jest.Mock).mockRejectedValue(mockError);
+
+      await StudioController.getAllStudios(
         mockRequest as Request,
         mockResponse as Response
       );
