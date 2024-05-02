@@ -3,7 +3,10 @@ import { Mocked } from "jest-mock";
 import dayjs from "dayjs";
 
 import { ScheduleController } from "./schedule-controller";
-import { CreateScheduleRequest } from "../models/schedule-model";
+import {
+  CreateScheduleRequest,
+  DeleteScheduleRequest,
+} from "../models/schedule-model";
 import { ScheduleService } from "../services/schedule-service";
 import { pool as Pool } from "../lib/database";
 
@@ -37,14 +40,6 @@ describe("ScheduleController", () => {
   let mockConnection: Partial<Mocked<any>>;
 
   beforeEach(() => {
-    mockRequest = {
-      body: {
-        movie_id: 1,
-        studio_id: 1,
-        showtime: "18:30",
-        showdate: "2024-01-02",
-      } as CreateScheduleRequest,
-    };
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -62,6 +57,15 @@ describe("ScheduleController", () => {
   });
 
   describe("createSchedule", () => {
+    mockRequest = {
+      body: {
+        movie_id: 1,
+        studio_id: 1,
+        showtime: "18:30",
+        showdate: "2024-01-02",
+      } as CreateScheduleRequest,
+    };
+
     it("should create a schedule successfully", async () => {
       const mockCreateScheduleResponse = {
         schedule_id: 1,
@@ -100,6 +104,57 @@ describe("ScheduleController", () => {
       );
 
       expect(ScheduleService.createSchedule).toHaveBeenCalledWith(
+        mockRequest.body,
+        mockConnection
+      );
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: false,
+        message: mockError.message,
+        timestamp: formattedNow,
+      });
+    });
+  });
+
+  describe("deleteSchedule", () => {
+    mockRequest = {
+      body: {
+        schedule_id: 1,
+      } as DeleteScheduleRequest,
+    };
+
+    it("should delete a schedule successfully", async () => {
+      const mockServiceResponse = {
+        affectedRowsCount: 1,
+      };
+      (ScheduleService.deleteSchedule as jest.Mock).mockResolvedValue(
+        mockServiceResponse
+      );
+
+      await ScheduleController.deleteSchedule(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(ScheduleService.deleteSchedule).toHaveBeenCalledWith(
+        mockRequest.body,
+        mockConnection
+      );
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    it("should handle errors when deleting a schedule", async () => {
+      const mockError = new Error("Failed to create schedule");
+      (ScheduleService.deleteSchedule as jest.Mock).mockRejectedValue(
+        mockError
+      );
+
+      await ScheduleController.deleteSchedule(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(ScheduleService.deleteSchedule).toHaveBeenCalledWith(
         mockRequest.body,
         mockConnection
       );
