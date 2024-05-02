@@ -59,8 +59,9 @@ const ScheduleService = {
       "showtime",
       "showdate",
     ]);
-    const movie = await MovieRepository.getMovieById(
-      { movie_id: createScheduleRequest.movie_id },
+
+    const movie = await MovieRepository.lockMovieById(
+      createScheduleRequest.movie_id,
       connection
     );
 

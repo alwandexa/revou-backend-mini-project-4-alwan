@@ -12,6 +12,8 @@ const ScheduleController = {
   createSchedule: async (req: Request, res: Response) => {
     const connection = await pool.getConnection();
 
+    connection.beginTransaction();
+
     try {
       const createScheduleRequest = req.body as CreateScheduleRequest;
       const createScheduleResponse = await ScheduleService.createSchedule(

@@ -40,7 +40,7 @@ const MovieRepository = {
     getMovieByIdRequest: GetMovieDetailRequest,
     connection: PoolConnection
   ) => {
-    const query = `select * from movies where movie_id = ${getMovieByIdRequest.movie_id}`;
+    const query = `select movie_id, title, director, release_date, runtime, movie_status from movies where movie_id = ${getMovieByIdRequest.movie_id}`;
 
     const [rows] = await connection.query<RowDataPacket[]>(query);
 
@@ -69,6 +69,17 @@ const MovieRepository = {
     const result = await connection.query<ResultSetHeader>(query);
 
     return result[0].affectedRows;
+  },
+  lockMovieById: async (movie_id: number, connection: PoolConnection) => {
+    const query = `SELECT movie_id, title, director, release_date, runtime, movie_status FROM movies WHERE movie_id = ${movie_id} FOR UPDATE`;
+
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+
+    if (rows.length === 0) {
+      throw new Error("Movie not found");
+    }
+
+    return rows[0];
   },
 };
 
