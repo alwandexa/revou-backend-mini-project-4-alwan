@@ -48,6 +48,7 @@ describe("ScheduleController", () => {
     mockConnection = {
       query: jest.fn(),
       release: jest.fn(),
+      beginTransaction: jest.fn(),
     } as Partial<Mocked<any>>;
     (Pool.getConnection as jest.Mock).mockResolvedValue(mockConnection);
   });
