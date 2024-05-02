@@ -166,4 +166,57 @@ describe("ScheduleController", () => {
       });
     });
   });
+
+  describe("updateSchedule", () => {
+    mockRequest = {
+      body: {
+        schedule_id: 1,
+      } as DeleteScheduleRequest,
+    };
+
+    it("should update a schedule successfully", async () => {
+      const mockServiceResponse = {
+        affectedRowsCount: 1,
+      };
+      (ScheduleService.updateSchedule as jest.Mock).mockResolvedValue(
+        mockServiceResponse
+      );
+
+      await ScheduleController.updateSchedule(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when update a schedule", async () => {
+      const mockError = new Error();
+      (ScheduleService.updateSchedule as jest.Mock).mockRejectedValue(
+        mockError
+      );
+
+      await ScheduleController.updateSchedule(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
 });
