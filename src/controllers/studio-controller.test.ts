@@ -72,11 +72,51 @@ describe("Movie Controller", () => {
       );
     });
 
-    it("should handle errors when create studio", async () => {
+    it("should handle errors when create schedule", async () => {
       const mockError = new Error();
       (StudioService.createStudio as jest.Mock).mockRejectedValue(mockError);
 
       await StudioController.createStudio(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
+
+  describe("Update Schedule", () => {
+    it("should update a schedule successfully", async () => {
+      (StudioService.updateStudio as jest.Mock).mockResolvedValue({});
+
+      await StudioController.updateStudio(
+        {} as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when update schedule", async () => {
+      const mockError = new Error();
+      (StudioService.updateStudio as jest.Mock).mockRejectedValue(mockError);
+
+      await StudioController.updateStudio(
         mockRequest as Request,
         mockResponse as Response
       );
