@@ -208,9 +208,9 @@ describe("Movie Controller", () => {
 
     it("should handle errors when delete movie", async () => {
       const mockError = new Error();
-      (MovieService.getAllMovies as jest.Mock).mockRejectedValue(mockError);
+      (MovieService.deleteMovie as jest.Mock).mockRejectedValue(mockError);
 
-      await MovieController.getAllMovies(
+      await MovieController.deleteMovie(
         mockRequest as Request,
         mockResponse as Response
       );
