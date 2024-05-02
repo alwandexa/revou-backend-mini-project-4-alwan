@@ -4,11 +4,7 @@ import { authMiddleware as auth } from "../middlewares/authorization";
 import { StudioController } from "../controllers/studio-controller";
 
 const studioRouter = Router();
-studioRouter.post(
-  "/studio/create",
-  auth("admin"),
-  StudioController.createStudio
-);
+studioRouter.post("/studio/add", auth("admin"), StudioController.createStudio);
 studioRouter.patch(
   "/studio/update",
   auth("admin"),
