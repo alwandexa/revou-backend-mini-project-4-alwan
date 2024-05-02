@@ -99,4 +99,88 @@ describe("Movie Controller", () => {
       );
     });
   });
+
+  describe("Get all movie", () => {
+    it("should get all movie successfully", async () => {
+      mockRequest = {};
+
+      (MovieService.getAllMovies as jest.Mock).mockResolvedValue({});
+
+      await MovieController.getAllMovies(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when create movie", async () => {
+      const mockError = new Error();
+      (MovieService.getAllMovies as jest.Mock).mockRejectedValue(mockError);
+
+      await MovieController.getAllMovies(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
+
+  describe("Delete movie", () => {
+    it("should delete movie successfully", async () => {
+      mockRequest = {};
+
+      (MovieService.deleteMovie as jest.Mock).mockResolvedValue({});
+
+      await MovieController.deleteMovie(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when create movie", async () => {
+      const mockError = new Error();
+      (MovieService.getAllMovies as jest.Mock).mockRejectedValue(mockError);
+
+      await MovieController.getAllMovies(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
 });
