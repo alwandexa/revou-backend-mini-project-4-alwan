@@ -164,11 +164,53 @@ describe("Movie Controller", () => {
       );
     });
 
-    it("should handle errors when create movie", async () => {
+    it("should handle errors when delete movie", async () => {
       const mockError = new Error();
       (MovieService.getAllMovies as jest.Mock).mockRejectedValue(mockError);
 
       await MovieController.getAllMovies(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+  });
+
+  describe("Update movie", () => {
+    it("should update movie successfully", async () => {
+      mockRequest = {};
+
+      (MovieService.updateMovie as jest.Mock).mockResolvedValue({});
+
+      await MovieController.updateMovie(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when update movie", async () => {
+      const mockError = new Error();
+      (MovieService.updateMovie as jest.Mock).mockRejectedValue(mockError);
+
+      await MovieController.updateMovie(
         mockRequest as Request,
         mockResponse as Response
       );
