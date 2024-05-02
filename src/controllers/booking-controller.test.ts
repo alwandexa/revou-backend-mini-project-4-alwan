@@ -29,7 +29,7 @@ jest.mock("../utils/util", () => ({
       timestamp: formattedNow,
     });
   }),
-  verifyJwtToken: jest.fn().mockResolvedValue({ sub: 1 }) 
+  verifyJwtToken: jest.fn().mockResolvedValue({ sub: 1 }),
 }));
 
 describe("BookingController", () => {
@@ -104,6 +104,60 @@ describe("BookingController", () => {
         message: mockError.message,
         timestamp: formattedNow,
       });
+    });
+  });
+
+  describe("Get booking", () => {
+    mockRequest = {
+      headers: {
+        authorization: "Bearer token",
+      },
+      body: {
+        user_id: 1,
+      } as CreateBookingRequest,
+    };
+
+    it("should get all user booking successfully", async () => {
+      const mockServiceResponse = {
+        booking_id: 1,
+      };
+      (BookingService.getHistoryByUserId as jest.Mock).mockResolvedValue(
+        mockServiceResponse
+      );
+
+      await BookingController.getBookings(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.any(String),
+          data: expect.any(Object),
+          timestamp: expect.any(String),
+        })
+      );
+    });
+
+    it("should handle errors when getting user booking", async () => {
+      const mockError = new Error();
+      (BookingService.getHistoryByUserId as jest.Mock).mockRejectedValue(mockError);
+
+      await BookingController.getBookings(
+        mockRequest as Request,
+        mockResponse as Response
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          message: expect.any(String),
+          timestamp: expect.any(String),
+        })
+      );
     });
   });
 });
