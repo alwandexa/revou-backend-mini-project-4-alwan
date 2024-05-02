@@ -66,7 +66,7 @@ const ScheduleService = {
 
     const showtimes = await ScheduleRepository.getShowtimes(
       {
-        studio_id: movie.movie_id,
+        studio_id: createScheduleRequest.studio_id,
         showdate: createScheduleRequest.showdate,
       },
       connection
